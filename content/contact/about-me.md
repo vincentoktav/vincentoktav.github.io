@@ -62,7 +62,7 @@ Well I wrote down the exact dialogue that I had with most people that I met here
 
 {{< figure src="map-of-indonesia.jpg" title="" lightbox="true" >}}
 
-Right now I am still a student at the [University of Illinois at Urbana-Champaign](https://illinois.edu/). However, I am also a self-taught statistician. To cover up the lack of knowledge that I did not receive from lecture and study materials, I spend a little time to study on my own mostly from the Internet mostly from [Coursera](https://www.coursera.org/) and [Kaggle](https://www.kaggle.com/). Never underestimate the power of the internet! Everyone can find and study a lot of stuff through it. As evidence, I built this website mostly by going through the internet and of course I did not know anything about HTML, CSS, and JavaScript.
+Right now I am still a student at the [University of Illinois at Urbana-Champaign](https://illinois.edu/). However, I am also a self-taught statistician. To cover up the lack of knowledge that I did not receive from lecture and study materials, I spend a little time to study from the Internet mostly from [Coursera](https://www.coursera.org/) and [Kaggle](https://www.kaggle.com/). Never underestimate the power of the internet! Everyone can find and study a lot of stuff through it. As evidence, I built this website mostly by going through the internet and of course I did not know anything about HTML, CSS, and JavaScript.
 
 Below is a list of expertise that I picked up through the Internet:
 

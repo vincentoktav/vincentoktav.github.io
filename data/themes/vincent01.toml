@@ -1,0 +1,20 @@
+# Theme metadata
+name = "vincent01"
+
+# Is theme light or dark?
+light = true
+
+# Primary
+primary = "#3DD1FE"
+
+# Menu
+menu_primary = "#F8FDFF"
+menu_text = "#333"
+menu_text_active = "#00AAFF"
+menu_title = "#333"
+
+# Backgrounds
+background = "#F8FDFF"
+home_section_odd = "#F8FDFF"
+home_section_even = "#F8FDFF"
+

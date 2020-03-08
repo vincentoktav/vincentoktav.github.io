@@ -37,7 +37,7 @@ height = "300px"
   
 [[item]]
   title = "Quote of the day"
-  content = '\"THE ONLY LIMIT IS YOUR IMAGINATION.\" - Hiro, BIG HERO 6'
+  content = '\"THE ONLY LIMIT IS YOUR IMAGINATION.\" - Hiro, Big Hero 6'
   align = "left"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).

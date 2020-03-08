@@ -41,6 +41,6 @@
   weight = 30
   
 [[main]]
-  name = "Surprise"
+  name = '<i class="fas fa-paw"></i>'
   url = "/lancelot"
   weight = 40

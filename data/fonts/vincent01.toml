@@ -1,0 +1,14 @@
+# Font style metadata
+name = "vincent01"
+
+# Optional Google font URL
+google_fonts = "Caladea|Open+Sans:700i|Roboto+Mono:400Spartan,400i|Karla:400" 
+# Font families
+heading_font = "Caladea"
+body_font = "Spartan"
+nav_font = "Spartan"
+mono_font = "Roboto Mono"
+
+# Font size
+font_size = "18"
+font_size_small = "16"
