@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python | Vincent Oktavianus</title>
+    <link>/tags/python/</link>
+      <atom:link href="/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <description>Python</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Thu, 31 Oct 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>Python</title>
+      <link>/tags/python/</link>
+    </image>
+    
+    <item>
+      <title>Creating a Mosaic [Part. 2]</title>
+      <link>/post/mosaic02/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/mosaic02/</guid>
+      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import skimage
+import skimage.io
+import pandas as pd
+
+import PIL
+from PIL import Image
+
+from os import listdir
+from os.path import isfile, join
+import sys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;creating-a-mosaic---part-2&#34;&gt;Creating a Mosaic - Part 2&lt;/h1&gt;
+&lt;h2 id=&#34;finding-the-average-color-of-a-region-of-an-image&#34;&gt;Finding the Average Color of a Region of an Image&lt;/h2&gt;
+&lt;p&gt;In Part 1, you found the average color of an image.  For this part, find the average color of a region of the image array &lt;code&gt;lab&lt;/code&gt;, a starting location (&lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;), and a &lt;code&gt;width&lt;/code&gt; and &lt;code&gt;height&lt;/code&gt;.  You need to return the same data type as in Part 1 (a dictionary with &lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, and &lt;code&gt;b&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def findAverageColor(lab, x, y, width, height):
+    # Your code here
+    sumL, suma, sumb = 0, 0, 0
+    count = 0
+    for v in range(x, x + height):
+        for w in range(y, y + width):
+            L, a, b = lab[v][w]
+            sumL += L
+            suma += a
+            sumb += b
+            count += 1
+            
+    return {&#39;L&#39;: sumL/count, &#39;a&#39;: suma/count, &#39;b&#39;: sumb/count}
+    
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 2a ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+info = &#39;\N{INFORMATION SOURCE}&#39;
+
+rgb1 = skimage.io.imread(&amp;quot;test.png&amp;quot;)
+lab1 = skimage.color.rgb2lab(rgb1)
+test = findAverageColor(lab1, 0, 0, 4, 4)
+
+assert( test != None ), &amp;quot;Your findAverageColor function must return a value (right now it&#39;s returning nothing).&amp;quot;
+assert( type(test) == type({}) ), f&amp;quot;Your findAverageColor function must return a dictionary (right now it&#39;s returning {type(test)}).&amp;quot;
+
+assert( &#39;L&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;L&#39;.&amp;quot;
+assert( &#39;a&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;a&#39;.&amp;quot;
+assert( &#39;b&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;b&#39;.&amp;quot;
+
+print(f&amp;quot;{info} Your test.png values (0, 0) -&amp;gt; (4, 4): (L={test[&#39;L&#39;]}, a={test[&#39;a&#39;]}, b={test[&#39;b&#39;]})&amp;quot;)
+assert( abs(test[&#39;L&#39;] - 54.244) &amp;gt; 0.001 ), &amp;quot;Your &#39;L&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;a&#39;] - 59.314) &amp;gt; 0.001 ), &amp;quot;Your &#39;a&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;b&#39;] - 52.9799) &amp;gt; 0.001 ), &amp;quot;Your &#39;b&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+
+assert( abs(test[&#39;L&#39;] - 47.197) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;a&#39;] - 49.034) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;b&#39;] - 38.609) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png.&amp;quot;
+
+
+test2 = findAverageColor(lab1, 0, 0, 2, 2)
+
+print(f&amp;quot;{info} Your test.png values (0, 0) -&amp;gt; (2, 2): (L={test2[&#39;L&#39;]}, a={test2[&#39;a&#39;]}, b={test2[&#39;b&#39;]})&amp;quot;)
+assert( abs(test2[&#39;L&#39;] - 54.244) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+assert( abs(test2[&#39;a&#39;] - 59.314) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+assert( abs(test2[&#39;b&#39;] - 52.9799) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+
+
+
+rgb3 = skimage.io.imread(&amp;quot;test3.png&amp;quot;)
+lab3 = skimage.color.rgb2lab(rgb3)
+test3 = findAverageColor(lab3, 0, 0, 4, 6)
+
+print(f&amp;quot;{info} Your test3.png values (0, 0) -&amp;gt; (4, 6): (L={test3[&#39;L&#39;]}, a={test3[&#39;a&#39;]}, b={test3[&#39;b&#39;]})&amp;quot;)
+assert( abs(test3[&#39;L&#39;] - 46.414) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;a&#39;] - 47.892) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;b&#39;] - 37.012) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test3.png.&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print()
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;ℹ Your test.png values (0, 0) -&amp;gt; (4, 4): (L=47.19722525581813, a=49.03421116311881, b=38.60877549417687)
+ℹ Your test.png values (0, 0) -&amp;gt; (2, 2): (L=54.244093289693964, a=59.3141053878179, b=52.979879933089656)
+ℹ Your test3.png values (0, 0) -&amp;gt; (4, 6): (L=46.41423991872082, a=47.89200069370779, b=37.011986112075455)
+
+🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;finding-the-best-match&#34;&gt;Finding the best match&lt;/h2&gt;
+&lt;p&gt;In Part 1, you saved a csv file of all tile images.  For this part, you will find the best tile image given an &lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, and &lt;code&gt;b&lt;/code&gt; value and your DataFrame, passed in as &lt;code&gt;df&lt;/code&gt;, in the same format as you saved in Part 1.&lt;/p&gt;
+&lt;p&gt;This function must return a new DataFrame with exactly one row that contains the best match out of all of the images in &lt;code&gt;df&lt;/code&gt; based on the Euclidean distance away from the provided (&lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, &lt;code&gt;b&lt;/code&gt;).  &lt;em&gt;(You should not remove rows from &lt;code&gt;df&lt;/code&gt; itself, as the same &lt;code&gt;df&lt;/code&gt; will be passed to you each time; make sure to assign your smallest one row to a new and differently named DataFrame.)&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+# Returns the filename for the image that is the best match given an L, a, and b value.
+def findBestMatch(df, L, a, b):
+    bestmatch = 10000
+    name = &amp;quot;nil&amp;quot;
+    for i in range(len(df)):
+        diff_L = abs(df[&#39;L&#39;][i] - L)
+        diff_a = abs(df[&#39;a&#39;][i] - a)
+        diff_b = abs(df[&#39;b&#39;][i] - b)
+        avg = pd.DataFrame([diff_L, diff_a, diff_b]).sum()
+        if float(avg) &amp;lt; float(bestmatch):
+            bestmatch = avg
+            name = df[&amp;quot;file&amp;quot;][i]
+    return df[df.file == name]
+    
+
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 2b ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+
+real_df = pd.DataFrame([
+    {&#39;file&#39;: &#39;test.png&#39;, &#39;L&#39;: 47.19722525581813, &#39;a&#39;: 49.03421116311881, &#39;b&#39;: 38.60877549417687},
+    {&#39;file&#39;: &#39;test2.png&#39;, &#39;L&#39;: 54.24409328969397, &#39;a&#39;: 59.3141053878179, &#39;b&#39;: 52.97987993308968},
+    {&#39;file&#39;: &#39;test3.png&#39;, &#39;L&#39;: 46.41423991872082, &#39;a&#39;: 47.89200069370779, &#39;b&#39;: 37.011986112075455}
+])
+
+bestMatch = findBestMatch(real_df, 0, 0, 0)
+assert(type(bestMatch) == type(pd.DataFrame())), &amp;quot;findBestMatch must return a DataFrame&amp;quot;
+assert(len(bestMatch) == 1), &amp;quot;findBestMatch must return exactly one best match&amp;quot;
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test3.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=0, a=0, b=0)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 47, 49, 38)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=47, a=49, b=38)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 54, 49, 38)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=54, a=49, b=38)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 54, 49, 52)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test2.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=54, a=49, b=52)&amp;quot;
+
+bestMatch = findBestMatch(real_df, -100, -100, -100)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test3.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=-100, a=-100, b=-100)&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;creating-your-mosaic&#34;&gt;Creating your mosaic!&lt;/h2&gt;
+&lt;p&gt;There are two majors values you can adjust:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tilesAcross&lt;/code&gt; controls how many tiles should make up the width of the mosaic image.  The larger this number, the more tiles you will have, the better your image will look (assuming good tiles), but the slower this will run.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;outputSize&lt;/code&gt; controls the size each tile image is drawn.  The larger this number, the more detail you will have in each tile image, the more you will be able to zoom in, but the bigger the output file will be in the end.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Adjust these values here:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# How many tiles across each row do you want in your final image?
+# ...this number is approximate, the exact tiles will find the best match to the size of your image around this number.
+tilesAcross = 200
+
+# How big should each tile be rendered in the masaic image?
+outputSize = 26
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, the following code uses your image from Part 1, your DataFrame of average colors for each image, the &lt;code&gt;findAverageColor&lt;/code&gt; function from Part 2a, and &lt;code&gt;findBestMatch&lt;/code&gt; function from Part 2b to draw a mosaic image!&lt;/p&gt;
+&lt;p&gt;Make sure to add the file you want to make a mosaic out of in &lt;code&gt;base.jpg&lt;/code&gt; and run this cell:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Load the saved image data (from Part 1)
+print(&amp;quot;Loading in saved average image values...&amp;quot;)
+df = pd.read_csv(&#39;tile-images.csv&#39;)
+
+# Load the moasic image:
+print(&amp;quot;Loading the base.jpg image...&amp;quot;)
+rgb = skimage.io.imread(&amp;quot;base.jpg&amp;quot;)
+lab = skimage.color.rgb2lab(rgb)
+w = len(lab)
+h = len(lab[0])
+
+# Ensure we have no half-tiles (this will cut off the edge of the photo if needed)
+tileSize = int(w / tilesAcross)
+w_tiles = int(w / tileSize)
+h_tiles = int(h / tileSize)
+w = w_tiles * tileSize
+h = h_tiles * tileSize
+
+# Create a final image of the correct size to draw the final mosaic on:
+baseImage = Image.new(&#39;RGB&#39;, (outputSize * h_tiles, outputSize * w_tiles))
+
+# Store images used to speed up processing (often once an image is used once, it will be used again):
+cache = {}
+
+print(f&amp;quot;Creating your moasic ({w_tiles} x {h_tiles} = {w_tiles * h_tiles} total tiles)...&amp;quot;)
+for x in range(0, w, tileSize):
+    for y in range(0, h, tileSize):
+        # Find the average color for the current tile:
+        tileAvgColor = findAverageColor(lab, x, y, tileSize, tileSize)
+        
+        # Find the best file match:
+        df_bestMatch = findBestMatch(df, tileAvgColor[&#39;L&#39;], tileAvgColor[&#39;a&#39;], tileAvgColor[&#39;b&#39;])
+        bestFileName = df_bestMatch[&#39;file&#39;].values[0]
+        
+        # load the iamge in and resize it to be a `outputSize` x `outputSize` (or get it from the cache)
+        if bestFileName in cache:
+            smallTile = cache[bestFileName]
+        else:
+            tileImage = Image.open(bestFileName)
+            tileW, tileH = tileImage.size
+            tileD = min(tileW, tileH)
+            smallTile = tileImage.crop( (0, 0, tileD, tileD) ).resize( (outputSize, outputSize), resample=PIL.Image.LANCZOS )
+            cache[bestFileName] = smallTile
+        
+        # Draw the tile:
+        baseImage.paste(smallTile, ( int((y / tileSize) * outputSize), int((x / tileSize) * outputSize)))
+        
+    # Print out a progress message:
+    completed = int((x / tileSize) + 1) * tileSize
+    pct = completed / (w_tiles * tileSize) * 100
+    sys.stdout.write(f&#39;\r  ...finished: {completed} / {w_tiles * tileSize} ({pct:.2f}%)&#39;)
+
+# Save the image as mosaic.jpg
+baseImage.save(&#39;mosaic.jpg&#39;)
+
+# Print a message:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(&amp;quot;&amp;quot;)
+print(&amp;quot;&amp;quot;)
+print(f&amp;quot;{tada} MOSAIC COMPLETE! {tada}&amp;quot;)
+print(&amp;quot;- See mosaic.jpg to see your mosaic!&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Loading in saved average image values...
+Loading the base.jpg image...
+Creating your moasic (206 x 161 = 33166 total tiles)...
+  ...finished: 412 / 412 (100.00%)
+
+🎉 MOSAIC COMPLETE! 🎉
+- See mosaic.jpg to see your moasic!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/img/mosaic.jpg&#34; alt=&#34;mosaic output&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Creating a Mosaic [Part. 1]</title>
+      <link>/post/mosaic01/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/mosaic01/</guid>
+      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import skimage
+import skimage.io
+import pandas as pd
+
+import PIL
+from PIL import Image
+
+from os import listdir
+from os.path import isfile, join
+import sys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;creating-a-mosaic---part-1&#34;&gt;Creating a Mosaic - Part 1&lt;/h1&gt;
+&lt;p&gt;To follow through, you can open 
+&lt;a href=&#34;https://github.com/vincentoktav/vincentoktav.github.io/tree/sources/content/post/mosaic&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;my&lt;/a&gt; github repository.&lt;/p&gt;
+&lt;h2 id=&#34;programming&#34;&gt;Programming!&lt;/h2&gt;
+&lt;p&gt;Create &lt;code&gt;findAverageImageColor&lt;/code&gt; function:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def findAverageImageColor(fileName):
+    # Your code here!
+    sumL, suma, sumb = 0, 0, 0
+    count = 0
+    rgb = skimage.io.imread(fileName)
+    lab = skimage.color.rgb2lab(rgb)
+    width = len(lab)
+    height = len(lab[0])
+    for x in range(width):
+        for y in range(height):
+            L, a, b = lab[x][y]
+            sumL += L
+            suma += a
+            sumb += b
+            count += 1
+            
+    return {&#39;L&#39;: sumL/count, &#39;a&#39;: suma/count, &#39;b&#39;: sumb/count}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;test-cases&#34;&gt;Test Cases&lt;/h3&gt;
+&lt;p&gt;These test cases help you debug your code to make sure you&amp;rsquo;re finding the correct average values for known images.  After you pass these test cases, then you&amp;rsquo;ll start using your own images! :)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 1c ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+info = &#39;\N{INFORMATION SOURCE}&#39;
+test = findAverageImageColor(&#39;test.png&#39;)
+
+assert( test != None ), &amp;quot;Your findAverageImageColor function must return a value (right now it&#39;s returning nothing).&amp;quot;
+assert( type(test) == type({}) ), f&amp;quot;Your findAverageImageColor function must return a dictionary (right now it&#39;s returning {type(test)}).&amp;quot;
+
+assert( &#39;L&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;L&#39;.&amp;quot;
+assert( &#39;a&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;a&#39;.&amp;quot;
+assert( &#39;b&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;b&#39;.&amp;quot;
+
+print(f&amp;quot;{info} Your test.png values: (L={test[&#39;L&#39;]}, a={test[&#39;a&#39;]}, b={test[&#39;b&#39;]})&amp;quot;)
+assert( abs(test[&#39;L&#39;] - 54.244) &amp;gt; 0.001 ), &amp;quot;Your &#39;L&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;a&#39;] - 59.314) &amp;gt; 0.001 ), &amp;quot;Your &#39;a&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;b&#39;] - 52.9799) &amp;gt; 0.001 ), &amp;quot;Your &#39;b&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+
+assert( abs(test[&#39;L&#39;] - 47.197) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;a&#39;] - 49.034) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;b&#39;] - 38.609) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png.&amp;quot;
+
+
+test2 = findAverageImageColor(&#39;test2.png&#39;)
+
+print(f&amp;quot;{info} Your test2.png values: (L={test2[&#39;L&#39;]}, a={test2[&#39;a&#39;]}, b={test2[&#39;b&#39;]})&amp;quot;)
+assert( abs(test2[&#39;L&#39;] - 54.244) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test2.png.&amp;quot;
+assert( abs(test2[&#39;a&#39;] - 59.314) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test2.png.&amp;quot;
+assert( abs(test2[&#39;b&#39;] - 52.9799) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test2.png.&amp;quot;
+
+
+test3 = findAverageImageColor(&#39;test3.png&#39;)
+
+print(f&amp;quot;{info} Your test3.png values: (L={test3[&#39;L&#39;]}, a={test3[&#39;a&#39;]}, b={test3[&#39;b&#39;]})&amp;quot;)
+assert( abs(test3[&#39;L&#39;] - 46.414) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;a&#39;] - 47.892) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;b&#39;] - 37.012) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test3.png.&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print()
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;ℹ Your test.png values: (L=47.19722525581813, a=49.03421116311881, b=38.60877549417687)
+ℹ Your test2.png values: (L=54.24409328969397, a=59.3141053878179, b=52.97987993308968)
+ℹ Your test3.png values: (L=46.41423991872082, a=47.89200069370779, b=37.011986112075455)
+
+🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;your-images&#34;&gt;Your Images&lt;/h2&gt;
+&lt;p&gt;Once your function works and passes all the test cases, this code loads all files in the &lt;code&gt;tile-images&lt;/code&gt; folder and stores the average color value of the image in &lt;code&gt;tile-images.csv&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This code is already complete, but depends on a correct &lt;code&gt;findAverageImageColor&lt;/code&gt; function!&lt;/li&gt;
+&lt;li&gt;Make sure your code is complete before running this function!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# What directory includes the images?
+imageDir = &amp;quot;tile-images&amp;quot;
+
+# Finds all files inside of `imageDir`:
+files = [imageDir + &amp;quot;/&amp;quot; + f for f in listdir(imageDir + &amp;quot;/&amp;quot;) if isfile(join(imageDir + &amp;quot;/&amp;quot;, f))]
+
+# Use `data` to store data about every image:
+data = []
+
+# Loop through every file:
+print(f&amp;quot;Starting to process {len(files)} files...&amp;quot;)
+for file in files:
+    try:
+        # Run `findAverageImageColor` and store the result:
+        result = findAverageImageColor(file)
+        d = { &#39;file&#39;: file, &#39;L&#39;: result[&#39;L&#39;], &#39;a&#39;: result[&#39;a&#39;], &#39;b&#39;: result[&#39;b&#39;] }
+        data.append(d)
+        pct = len(data) / len(files) * 100
+        sys.stdout.write(f&amp;quot;\r  ... {len(data)} / {len(files)} total files processed ({pct:.2f}%)&amp;quot;)
+    except ValueError as e:
+        print(f&amp;quot;!! {file} failed to process (this can happen if the image is black/white and has no color data?)&amp;quot;)
+        print(&amp;quot;...if so, remove the image and run again.&amp;quot;)
+        print(repr(e))
+        break
+                
+# Save the data as a DataFrame and CSV file:
+df = pd.DataFrame(data)
+df.to_csv(&#39;tile-images.csv&#39;)
+df
+
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(&amp;quot;&amp;quot;)
+print(&amp;quot;&amp;quot;)
+print(f&amp;quot;{tada} Image data saved as &amp;quot;&amp;quot;tile-images.csv&amp;quot;&amp;quot;&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Starting to process 2113 files...
+  ... 2113 / 2113 total files processed (100.00%)
+
+🎉 Image data saved as tile-images.csv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;continue-to-part-2&#34;&gt;Continue to Part 2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Part 2 will use the CSV file you saved, &lt;code&gt;tile-images.csv&lt;/code&gt;, to build your image mosaic!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

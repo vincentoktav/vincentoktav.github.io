@@ -5,12 +5,1252 @@
     <link>/authors/vincent/</link>
       <atom:link href="/authors/vincent/index.xml" rel="self" type="application/rss+xml" />
     <description>Vincent Oktavianus</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Sat, 07 Dec 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>Vincent Oktavianus</title>
       <link>/authors/vincent/</link>
     </image>
+    
+    <item>
+      <title>Basic Exploratory Data Analysis and Simple Linear Regression in Python</title>
+      <link>/post/wine-eda/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      <guid>/post/wine-eda/</guid>
+      <description>&lt;h1 id=&#34;import-library&#34;&gt;Import Library&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import math
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+
+# Visulaization options:
+%matplotlib inline
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;read-data&#34;&gt;Read data&lt;/h1&gt;
+&lt;h3 id=&#34;data-obtained-from-uci-machine-learning-repository--accessed-via-kaggle-httpswwwkagglecomucimlred-wine-quality-cortez-et-al-2009&#34;&gt;Data obtained from UCI Machine Learning Repository &amp;amp; accessed via Kaggle (&lt;a href=&#34;https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009&#34;&gt;https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009&lt;/a&gt;)&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = pd.read_csv(&amp;quot;redwine.csv&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;7.4&lt;/td&gt;
+      &lt;td&gt;0.700&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;34.0&lt;/td&gt;
+      &lt;td&gt;0.99780&lt;/td&gt;
+      &lt;td&gt;3.51&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;9.4&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;7.8&lt;/td&gt;
+      &lt;td&gt;0.880&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;2.6&lt;/td&gt;
+      &lt;td&gt;0.098&lt;/td&gt;
+      &lt;td&gt;25.0&lt;/td&gt;
+      &lt;td&gt;67.0&lt;/td&gt;
+      &lt;td&gt;0.99680&lt;/td&gt;
+      &lt;td&gt;3.20&lt;/td&gt;
+      &lt;td&gt;0.68&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;7.8&lt;/td&gt;
+      &lt;td&gt;0.760&lt;/td&gt;
+      &lt;td&gt;0.04&lt;/td&gt;
+      &lt;td&gt;2.3&lt;/td&gt;
+      &lt;td&gt;0.092&lt;/td&gt;
+      &lt;td&gt;15.0&lt;/td&gt;
+      &lt;td&gt;54.0&lt;/td&gt;
+      &lt;td&gt;0.99700&lt;/td&gt;
+      &lt;td&gt;3.26&lt;/td&gt;
+      &lt;td&gt;0.65&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;11.2&lt;/td&gt;
+      &lt;td&gt;0.280&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.075&lt;/td&gt;
+      &lt;td&gt;17.0&lt;/td&gt;
+      &lt;td&gt;60.0&lt;/td&gt;
+      &lt;td&gt;0.99800&lt;/td&gt;
+      &lt;td&gt;3.16&lt;/td&gt;
+      &lt;td&gt;0.58&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;7.4&lt;/td&gt;
+      &lt;td&gt;0.700&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;34.0&lt;/td&gt;
+      &lt;td&gt;0.99780&lt;/td&gt;
+      &lt;td&gt;3.51&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;9.4&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1594&lt;/td&gt;
+      &lt;td&gt;6.2&lt;/td&gt;
+      &lt;td&gt;0.600&lt;/td&gt;
+      &lt;td&gt;0.08&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;0.090&lt;/td&gt;
+      &lt;td&gt;32.0&lt;/td&gt;
+      &lt;td&gt;44.0&lt;/td&gt;
+      &lt;td&gt;0.99490&lt;/td&gt;
+      &lt;td&gt;3.45&lt;/td&gt;
+      &lt;td&gt;0.58&lt;/td&gt;
+      &lt;td&gt;10.5&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1595&lt;/td&gt;
+      &lt;td&gt;5.9&lt;/td&gt;
+      &lt;td&gt;0.550&lt;/td&gt;
+      &lt;td&gt;0.10&lt;/td&gt;
+      &lt;td&gt;2.2&lt;/td&gt;
+      &lt;td&gt;0.062&lt;/td&gt;
+      &lt;td&gt;39.0&lt;/td&gt;
+      &lt;td&gt;51.0&lt;/td&gt;
+      &lt;td&gt;0.99512&lt;/td&gt;
+      &lt;td&gt;3.52&lt;/td&gt;
+      &lt;td&gt;0.76&lt;/td&gt;
+      &lt;td&gt;11.2&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1596&lt;/td&gt;
+      &lt;td&gt;6.3&lt;/td&gt;
+      &lt;td&gt;0.510&lt;/td&gt;
+      &lt;td&gt;0.13&lt;/td&gt;
+      &lt;td&gt;2.3&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;29.0&lt;/td&gt;
+      &lt;td&gt;40.0&lt;/td&gt;
+      &lt;td&gt;0.99574&lt;/td&gt;
+      &lt;td&gt;3.42&lt;/td&gt;
+      &lt;td&gt;0.75&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1597&lt;/td&gt;
+      &lt;td&gt;5.9&lt;/td&gt;
+      &lt;td&gt;0.645&lt;/td&gt;
+      &lt;td&gt;0.12&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;0.075&lt;/td&gt;
+      &lt;td&gt;32.0&lt;/td&gt;
+      &lt;td&gt;44.0&lt;/td&gt;
+      &lt;td&gt;0.99547&lt;/td&gt;
+      &lt;td&gt;3.57&lt;/td&gt;
+      &lt;td&gt;0.71&lt;/td&gt;
+      &lt;td&gt;10.2&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1598&lt;/td&gt;
+      &lt;td&gt;6.0&lt;/td&gt;
+      &lt;td&gt;0.310&lt;/td&gt;
+      &lt;td&gt;0.47&lt;/td&gt;
+      &lt;td&gt;3.6&lt;/td&gt;
+      &lt;td&gt;0.067&lt;/td&gt;
+      &lt;td&gt;18.0&lt;/td&gt;
+      &lt;td&gt;42.0&lt;/td&gt;
+      &lt;td&gt;0.99549&lt;/td&gt;
+      &lt;td&gt;3.39&lt;/td&gt;
+      &lt;td&gt;0.66&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;1599 rows × 12 columns&lt;/p&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;data-description&#34;&gt;Data Description&lt;/h2&gt;
+&lt;p&gt;Accessed via Kaggle&lt;/p&gt;
+&lt;h3 id=&#34;about&#34;&gt;About&lt;/h3&gt;
+&lt;p&gt;The dataset is related to red variants of the Portuguese &lt;strong&gt;&amp;ldquo;Vinho Verde&amp;rdquo;&lt;/strong&gt; wine. For more details, consult the reference [Cortez et al., 2009]. Due to privacy and logistic issues, only physicochemical (inputs) and sensory (the output) variables are available (e.g. there is no data about grape types, wine brand, wine selling price, etc.).&lt;/p&gt;
+&lt;h3 id=&#34;input-variables-based-on-physicochemical-tests&#34;&gt;Input variables (based on physicochemical tests):&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fixed acidity&lt;/code&gt; : most acids involved with wine or fixed or nonvolatile (do not evaporate readily).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;volatile acidity&lt;/code&gt; : the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;citric acid&lt;/code&gt; : found in small quantities, citric acid can add &amp;lsquo;freshness&amp;rsquo; and flavor to wines.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;residual sugar&lt;/code&gt; : the amount of sugar remaining after fermentation stops, it&amp;rsquo;s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chlorides&lt;/code&gt; : the amount of salt in the wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;free sulfur dioxide&lt;/code&gt; : the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;total sulfur dioxide&lt;/code&gt; : amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;density&lt;/code&gt; : the density of water is close to that of water depending on the percent alcohol and sugar content.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pH&lt;/code&gt; : describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sulphates&lt;/code&gt; : a wine additive which can contribute to sulfur dioxide gas (S02) levels, which acts as an antimicrobial and antioxidant.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;alcohol&lt;/code&gt; : the percent alcohol content of the wine.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;output-variable-based-on-sensory-data&#34;&gt;Output variable (based on sensory data):&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;quality&lt;/code&gt; : score between 0 and 10 given by human wine tasters.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exploratory-data-analysis-eda&#34;&gt;Exploratory Data Analysis (EDA)&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out dataframe dimension or shape (rows x columns)
+df.shape
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;(1599, 12)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out information on the data
+df.info()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;class &#39;pandas.core.frame.DataFrame&#39;&amp;gt;
+RangeIndex: 1599 entries, 0 to 1598
+Data columns (total 12 columns):
+fixed acidity           1599 non-null float64
+volatile acidity        1599 non-null float64
+citric acid             1599 non-null float64
+residual sugar          1599 non-null float64
+chlorides               1599 non-null float64
+free sulfur dioxide     1599 non-null float64
+total sulfur dioxide    1599 non-null float64
+density                 1599 non-null float64
+pH                      1599 non-null float64
+sulphates               1599 non-null float64
+alcohol                 1599 non-null float64
+quality                 1599 non-null int64
+dtypes: float64(11), int64(1)
+memory usage: 150.0 KB
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out summary information about all numeric data columns in your dataset.
+df.describe()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;count&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;mean&lt;/td&gt;
+      &lt;td&gt;8.319637&lt;/td&gt;
+      &lt;td&gt;0.527821&lt;/td&gt;
+      &lt;td&gt;0.270976&lt;/td&gt;
+      &lt;td&gt;2.538806&lt;/td&gt;
+      &lt;td&gt;0.087467&lt;/td&gt;
+      &lt;td&gt;15.874922&lt;/td&gt;
+      &lt;td&gt;46.467792&lt;/td&gt;
+      &lt;td&gt;0.996747&lt;/td&gt;
+      &lt;td&gt;3.311113&lt;/td&gt;
+      &lt;td&gt;0.658149&lt;/td&gt;
+      &lt;td&gt;10.422983&lt;/td&gt;
+      &lt;td&gt;5.636023&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;std&lt;/td&gt;
+      &lt;td&gt;1.741096&lt;/td&gt;
+      &lt;td&gt;0.179060&lt;/td&gt;
+      &lt;td&gt;0.194801&lt;/td&gt;
+      &lt;td&gt;1.409928&lt;/td&gt;
+      &lt;td&gt;0.047065&lt;/td&gt;
+      &lt;td&gt;10.460157&lt;/td&gt;
+      &lt;td&gt;32.895324&lt;/td&gt;
+      &lt;td&gt;0.001887&lt;/td&gt;
+      &lt;td&gt;0.154386&lt;/td&gt;
+      &lt;td&gt;0.169507&lt;/td&gt;
+      &lt;td&gt;1.065668&lt;/td&gt;
+      &lt;td&gt;0.807569&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;min&lt;/td&gt;
+      &lt;td&gt;4.600000&lt;/td&gt;
+      &lt;td&gt;0.120000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.900000&lt;/td&gt;
+      &lt;td&gt;0.012000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+      &lt;td&gt;0.990070&lt;/td&gt;
+      &lt;td&gt;2.740000&lt;/td&gt;
+      &lt;td&gt;0.330000&lt;/td&gt;
+      &lt;td&gt;8.400000&lt;/td&gt;
+      &lt;td&gt;3.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;25%&lt;/td&gt;
+      &lt;td&gt;7.100000&lt;/td&gt;
+      &lt;td&gt;0.390000&lt;/td&gt;
+      &lt;td&gt;0.090000&lt;/td&gt;
+      &lt;td&gt;1.900000&lt;/td&gt;
+      &lt;td&gt;0.070000&lt;/td&gt;
+      &lt;td&gt;7.000000&lt;/td&gt;
+      &lt;td&gt;22.000000&lt;/td&gt;
+      &lt;td&gt;0.995600&lt;/td&gt;
+      &lt;td&gt;3.210000&lt;/td&gt;
+      &lt;td&gt;0.550000&lt;/td&gt;
+      &lt;td&gt;9.500000&lt;/td&gt;
+      &lt;td&gt;5.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;50%&lt;/td&gt;
+      &lt;td&gt;7.900000&lt;/td&gt;
+      &lt;td&gt;0.520000&lt;/td&gt;
+      &lt;td&gt;0.260000&lt;/td&gt;
+      &lt;td&gt;2.200000&lt;/td&gt;
+      &lt;td&gt;0.079000&lt;/td&gt;
+      &lt;td&gt;14.000000&lt;/td&gt;
+      &lt;td&gt;38.000000&lt;/td&gt;
+      &lt;td&gt;0.996750&lt;/td&gt;
+      &lt;td&gt;3.310000&lt;/td&gt;
+      &lt;td&gt;0.620000&lt;/td&gt;
+      &lt;td&gt;10.200000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;75%&lt;/td&gt;
+      &lt;td&gt;9.200000&lt;/td&gt;
+      &lt;td&gt;0.640000&lt;/td&gt;
+      &lt;td&gt;0.420000&lt;/td&gt;
+      &lt;td&gt;2.600000&lt;/td&gt;
+      &lt;td&gt;0.090000&lt;/td&gt;
+      &lt;td&gt;21.000000&lt;/td&gt;
+      &lt;td&gt;62.000000&lt;/td&gt;
+      &lt;td&gt;0.997835&lt;/td&gt;
+      &lt;td&gt;3.400000&lt;/td&gt;
+      &lt;td&gt;0.730000&lt;/td&gt;
+      &lt;td&gt;11.100000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;15.900000&lt;/td&gt;
+      &lt;td&gt;1.580000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;15.500000&lt;/td&gt;
+      &lt;td&gt;0.611000&lt;/td&gt;
+      &lt;td&gt;72.000000&lt;/td&gt;
+      &lt;td&gt;289.000000&lt;/td&gt;
+      &lt;td&gt;1.003690&lt;/td&gt;
+      &lt;td&gt;4.010000&lt;/td&gt;
+      &lt;td&gt;2.000000&lt;/td&gt;
+      &lt;td&gt;14.900000&lt;/td&gt;
+      &lt;td&gt;8.000000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the distribution on each column (variable) 
+df.hist(bins = 50, edgecolor = &#39;b&#39;, grid = False,
+                linewidth = 1.0,
+                xlabelsize = 8, ylabelsize = 8,  
+                figsize = (16, 6), color = &#39;orange&#39;)    
+plt.tight_layout(rect = (0, 0, 1.5, 1.5))   
+plt.suptitle(&#39;Red Wine Plots&#39;, x = 0.75, y = 1.65, fontsize = 20);  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image1.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out histogram of the quality variable 
+df[&#39;quality&#39;].hist(bins = 6, grid = False, color = &#39;red&#39;, edgecolor = &#39;b&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a1f4fc438&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image2.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the correlation matrix (for each column)
+df.corr()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;fixed acidity&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.256131&lt;/td&gt;
+      &lt;td&gt;0.671703&lt;/td&gt;
+      &lt;td&gt;0.114777&lt;/td&gt;
+      &lt;td&gt;0.093705&lt;/td&gt;
+      &lt;td&gt;-0.153794&lt;/td&gt;
+      &lt;td&gt;-0.113181&lt;/td&gt;
+      &lt;td&gt;0.668047&lt;/td&gt;
+      &lt;td&gt;-0.682978&lt;/td&gt;
+      &lt;td&gt;0.183006&lt;/td&gt;
+      &lt;td&gt;-0.061668&lt;/td&gt;
+      &lt;td&gt;0.124052&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;volatile acidity&lt;/td&gt;
+      &lt;td&gt;-0.256131&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.552496&lt;/td&gt;
+      &lt;td&gt;0.001918&lt;/td&gt;
+      &lt;td&gt;0.061298&lt;/td&gt;
+      &lt;td&gt;-0.010504&lt;/td&gt;
+      &lt;td&gt;0.076470&lt;/td&gt;
+      &lt;td&gt;0.022026&lt;/td&gt;
+      &lt;td&gt;0.234937&lt;/td&gt;
+      &lt;td&gt;-0.260987&lt;/td&gt;
+      &lt;td&gt;-0.202288&lt;/td&gt;
+      &lt;td&gt;-0.390558&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;citric acid&lt;/td&gt;
+      &lt;td&gt;0.671703&lt;/td&gt;
+      &lt;td&gt;-0.552496&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.143577&lt;/td&gt;
+      &lt;td&gt;0.203823&lt;/td&gt;
+      &lt;td&gt;-0.060978&lt;/td&gt;
+      &lt;td&gt;0.035533&lt;/td&gt;
+      &lt;td&gt;0.364947&lt;/td&gt;
+      &lt;td&gt;-0.541904&lt;/td&gt;
+      &lt;td&gt;0.312770&lt;/td&gt;
+      &lt;td&gt;0.109903&lt;/td&gt;
+      &lt;td&gt;0.226373&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;residual sugar&lt;/td&gt;
+      &lt;td&gt;0.114777&lt;/td&gt;
+      &lt;td&gt;0.001918&lt;/td&gt;
+      &lt;td&gt;0.143577&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.055610&lt;/td&gt;
+      &lt;td&gt;0.187049&lt;/td&gt;
+      &lt;td&gt;0.203028&lt;/td&gt;
+      &lt;td&gt;0.355283&lt;/td&gt;
+      &lt;td&gt;-0.085652&lt;/td&gt;
+      &lt;td&gt;0.005527&lt;/td&gt;
+      &lt;td&gt;0.042075&lt;/td&gt;
+      &lt;td&gt;0.013732&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;chlorides&lt;/td&gt;
+      &lt;td&gt;0.093705&lt;/td&gt;
+      &lt;td&gt;0.061298&lt;/td&gt;
+      &lt;td&gt;0.203823&lt;/td&gt;
+      &lt;td&gt;0.055610&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.005562&lt;/td&gt;
+      &lt;td&gt;0.047400&lt;/td&gt;
+      &lt;td&gt;0.200632&lt;/td&gt;
+      &lt;td&gt;-0.265026&lt;/td&gt;
+      &lt;td&gt;0.371260&lt;/td&gt;
+      &lt;td&gt;-0.221141&lt;/td&gt;
+      &lt;td&gt;-0.128907&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;free sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.153794&lt;/td&gt;
+      &lt;td&gt;-0.010504&lt;/td&gt;
+      &lt;td&gt;-0.060978&lt;/td&gt;
+      &lt;td&gt;0.187049&lt;/td&gt;
+      &lt;td&gt;0.005562&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.667666&lt;/td&gt;
+      &lt;td&gt;-0.021946&lt;/td&gt;
+      &lt;td&gt;0.070377&lt;/td&gt;
+      &lt;td&gt;0.051658&lt;/td&gt;
+      &lt;td&gt;-0.069408&lt;/td&gt;
+      &lt;td&gt;-0.050656&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;total sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.113181&lt;/td&gt;
+      &lt;td&gt;0.076470&lt;/td&gt;
+      &lt;td&gt;0.035533&lt;/td&gt;
+      &lt;td&gt;0.203028&lt;/td&gt;
+      &lt;td&gt;0.047400&lt;/td&gt;
+      &lt;td&gt;0.667666&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.071269&lt;/td&gt;
+      &lt;td&gt;-0.066495&lt;/td&gt;
+      &lt;td&gt;0.042947&lt;/td&gt;
+      &lt;td&gt;-0.205654&lt;/td&gt;
+      &lt;td&gt;-0.185100&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;density&lt;/td&gt;
+      &lt;td&gt;0.668047&lt;/td&gt;
+      &lt;td&gt;0.022026&lt;/td&gt;
+      &lt;td&gt;0.364947&lt;/td&gt;
+      &lt;td&gt;0.355283&lt;/td&gt;
+      &lt;td&gt;0.200632&lt;/td&gt;
+      &lt;td&gt;-0.021946&lt;/td&gt;
+      &lt;td&gt;0.071269&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.341699&lt;/td&gt;
+      &lt;td&gt;0.148506&lt;/td&gt;
+      &lt;td&gt;-0.496180&lt;/td&gt;
+      &lt;td&gt;-0.174919&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;pH&lt;/td&gt;
+      &lt;td&gt;-0.682978&lt;/td&gt;
+      &lt;td&gt;0.234937&lt;/td&gt;
+      &lt;td&gt;-0.541904&lt;/td&gt;
+      &lt;td&gt;-0.085652&lt;/td&gt;
+      &lt;td&gt;-0.265026&lt;/td&gt;
+      &lt;td&gt;0.070377&lt;/td&gt;
+      &lt;td&gt;-0.066495&lt;/td&gt;
+      &lt;td&gt;-0.341699&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.196648&lt;/td&gt;
+      &lt;td&gt;0.205633&lt;/td&gt;
+      &lt;td&gt;-0.057731&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;sulphates&lt;/td&gt;
+      &lt;td&gt;0.183006&lt;/td&gt;
+      &lt;td&gt;-0.260987&lt;/td&gt;
+      &lt;td&gt;0.312770&lt;/td&gt;
+      &lt;td&gt;0.005527&lt;/td&gt;
+      &lt;td&gt;0.371260&lt;/td&gt;
+      &lt;td&gt;0.051658&lt;/td&gt;
+      &lt;td&gt;0.042947&lt;/td&gt;
+      &lt;td&gt;0.148506&lt;/td&gt;
+      &lt;td&gt;-0.196648&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.093595&lt;/td&gt;
+      &lt;td&gt;0.251397&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;alcohol&lt;/td&gt;
+      &lt;td&gt;-0.061668&lt;/td&gt;
+      &lt;td&gt;-0.202288&lt;/td&gt;
+      &lt;td&gt;0.109903&lt;/td&gt;
+      &lt;td&gt;0.042075&lt;/td&gt;
+      &lt;td&gt;-0.221141&lt;/td&gt;
+      &lt;td&gt;-0.069408&lt;/td&gt;
+      &lt;td&gt;-0.205654&lt;/td&gt;
+      &lt;td&gt;-0.496180&lt;/td&gt;
+      &lt;td&gt;0.205633&lt;/td&gt;
+      &lt;td&gt;0.093595&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.476166&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;quality&lt;/td&gt;
+      &lt;td&gt;0.124052&lt;/td&gt;
+      &lt;td&gt;-0.390558&lt;/td&gt;
+      &lt;td&gt;0.226373&lt;/td&gt;
+      &lt;td&gt;0.013732&lt;/td&gt;
+      &lt;td&gt;-0.128907&lt;/td&gt;
+      &lt;td&gt;-0.050656&lt;/td&gt;
+      &lt;td&gt;-0.185100&lt;/td&gt;
+      &lt;td&gt;-0.174919&lt;/td&gt;
+      &lt;td&gt;-0.057731&lt;/td&gt;
+      &lt;td&gt;0.251397&lt;/td&gt;
+      &lt;td&gt;0.476166&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out correlation heatmap using &#39;seaborn&#39; library
+sns.heatmap(df.corr(), cmap = &amp;quot;YlGnBu&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a1fad1400&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image3.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;modeling&#34;&gt;Modeling&lt;/h1&gt;
+&lt;h2 id=&#34;using-linear-regression&#34;&gt;Using Linear Regression&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a linear regression model:
+model = LinearRegression()
+
+# Train (&amp;quot;fit&amp;quot;) the model:
+model = model.fit(df[ [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;] ], df[&#39;quality&#39;] )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the intercept:
+intercept = model.intercept_
+intercept
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;21.965208449448177
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the slope (as table):
+slope = model.coef_
+
+coeff_df = pd.DataFrame(slope, [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;]  , columns = [&#39;Coefficient&#39;])  
+coeff_df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;Coefficient&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;fixed acidity&lt;/td&gt;
+      &lt;td&gt;0.024991&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;volatile acidity&lt;/td&gt;
+      &lt;td&gt;-1.083590&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;citric acid&lt;/td&gt;
+      &lt;td&gt;-0.182564&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;residual sugar&lt;/td&gt;
+      &lt;td&gt;0.016331&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;chlorides&lt;/td&gt;
+      &lt;td&gt;-1.874225&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;free sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;0.004361&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;total sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.003265&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;density&lt;/td&gt;
+      &lt;td&gt;-17.881164&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;pH&lt;/td&gt;
+      &lt;td&gt;-0.413653&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;sulphates&lt;/td&gt;
+      &lt;td&gt;0.916334&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;alcohol&lt;/td&gt;
+      &lt;td&gt;0.276198&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# create prediction using our model
+df[&amp;quot;predicted&amp;quot;] = model.predict( df[ [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;] ] )
+
+df[&amp;quot;predicted&amp;quot;] = round(df[&amp;quot;predicted&amp;quot;], 0)
+df[&amp;quot;predicted&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;0       5.0
+1       5.0
+2       5.0
+3       6.0
+4       5.0
+       ... 
+1594    6.0
+1595    6.0
+1596    6.0
+1597    5.0
+1598    6.0
+Name: predicted, Length: 1599, dtype: float64
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;results&#34;&gt;Results&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;relationship-of-ph-and-fixed-acidity&#34;&gt;Relationship of &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the correlation matrix (in EDA section), we can see that &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt; have the highest correlation with the value of &lt;strong&gt;-0.682978&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a scatter plot between &#39;pH&#39; (x-axis) and &#39;fixed acidity&#39;(y-axis). 
+df.plot.scatter(x = &#39;pH&#39;, y = &#39;fixed acidity&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a2009fb00&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image4.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This negative correlation might be obvious and understandable since&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pH is the measure of acidity/basicity with a scale between 0 (very acid) and 14 (very basic) # information taken from chemistry class&lt;/li&gt;
+&lt;li&gt;so the more acidic is a solution, pH value will decrease.&lt;/li&gt;
+&lt;li&gt;as indicated in the data description, most wines are acidic and have pH values of 3-4 # in this data (lowest = 2.74 and highest = 4.01) obtained from EDA section.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Therefore, we can conclude that there is a causation between &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;relationship-of-quality-and-alcohol&#34;&gt;Relationship of &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the correlation matrix (in EDA section), we found out that &lt;code&gt;alcohol&lt;/code&gt; has the highest correlation with our target or response variable &lt;code&gt;quality&lt;/code&gt; with a value of &lt;strong&gt;0.476166&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# visualization using &#39;seaborn&#39; library for scatter plot between &#39;alcohol&#39; and &#39;quality&#39;
+sns.set()
+sns.relplot(data = df, x = &#39;alcohol&#39;, y = &#39;quality&#39;, kind = &#39;line&#39;, height = 6, aspect = 2, color = &#39;red&#39;);    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image5.jpg&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The plot above clearly reflects the positive correlation between &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt;. Where an increase in the alcohol level (&lt;strong&gt;&amp;lt;&lt;/strong&gt; 14) &lt;strong&gt;might&lt;/strong&gt; result in a better wine quality.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;One important thing to mention is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;This might not be necessarily true&lt;/strong&gt; since there are cases where a higher quality level might result in lower wine quality. (in this dataset, for instance, a wine with 9% alcohol level has a lower quality than wine with 8% alcohol level).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;While there is a positive correlation between &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt; their relationship does not indicate causality.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;discussion&#34;&gt;Discussion&lt;/h1&gt;
+&lt;p&gt;The predictive ability of our model is very &lt;strong&gt;low&lt;/strong&gt; with an accuracy of only &lt;strong&gt;59.16%&lt;/strong&gt;. This means our model does a really bad job on predicting the wine quality.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This bad results (predictive power) might be due to:
+&lt;ul&gt;
+&lt;li&gt;Limited predictor variable; in this dataset, we are only given variables that are based on physicochemical tests (lab tests such as alcohol percentage level, pH value, etc.).&lt;/li&gt;
+&lt;li&gt;There are many predictor variables that might be more helpful in order to predict the wine quality such as &lt;code&gt;grape type&lt;/code&gt;, &lt;code&gt;wine age&lt;/code&gt;, &lt;code&gt;vineyard location&lt;/code&gt;, and etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# check our model accuracy
+(df[&amp;quot;predicted&amp;quot;] == df[&amp;quot;quality&amp;quot;]).mean()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;0.5916197623514696
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;solutions-and-recommendations&#34;&gt;Solutions and Recommendations:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Obtain more data (predictor variables and samples) and do another analysis.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Creating a Mosaic [Part. 2]</title>
+      <link>/post/mosaic02/</link>
+      <pubDate>Thu, 31 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/mosaic02/</guid>
+      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import skimage
+import skimage.io
+import pandas as pd
+
+import PIL
+from PIL import Image
+
+from os import listdir
+from os.path import isfile, join
+import sys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;creating-a-mosaic---part-2&#34;&gt;Creating a Mosaic - Part 2&lt;/h1&gt;
+&lt;h2 id=&#34;finding-the-average-color-of-a-region-of-an-image&#34;&gt;Finding the Average Color of a Region of an Image&lt;/h2&gt;
+&lt;p&gt;In Part 1, you found the average color of an image.  For this part, find the average color of a region of the image array &lt;code&gt;lab&lt;/code&gt;, a starting location (&lt;code&gt;x&lt;/code&gt; and &lt;code&gt;y&lt;/code&gt;), and a &lt;code&gt;width&lt;/code&gt; and &lt;code&gt;height&lt;/code&gt;.  You need to return the same data type as in Part 1 (a dictionary with &lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, and &lt;code&gt;b&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def findAverageColor(lab, x, y, width, height):
+    # Your code here
+    sumL, suma, sumb = 0, 0, 0
+    count = 0
+    for v in range(x, x + height):
+        for w in range(y, y + width):
+            L, a, b = lab[v][w]
+            sumL += L
+            suma += a
+            sumb += b
+            count += 1
+            
+    return {&#39;L&#39;: sumL/count, &#39;a&#39;: suma/count, &#39;b&#39;: sumb/count}
+    
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 2a ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+info = &#39;\N{INFORMATION SOURCE}&#39;
+
+rgb1 = skimage.io.imread(&amp;quot;test.png&amp;quot;)
+lab1 = skimage.color.rgb2lab(rgb1)
+test = findAverageColor(lab1, 0, 0, 4, 4)
+
+assert( test != None ), &amp;quot;Your findAverageColor function must return a value (right now it&#39;s returning nothing).&amp;quot;
+assert( type(test) == type({}) ), f&amp;quot;Your findAverageColor function must return a dictionary (right now it&#39;s returning {type(test)}).&amp;quot;
+
+assert( &#39;L&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;L&#39;.&amp;quot;
+assert( &#39;a&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;a&#39;.&amp;quot;
+assert( &#39;b&#39; in test ), &amp;quot;Your findAverageColor must return a value for &#39;b&#39;.&amp;quot;
+
+print(f&amp;quot;{info} Your test.png values (0, 0) -&amp;gt; (4, 4): (L={test[&#39;L&#39;]}, a={test[&#39;a&#39;]}, b={test[&#39;b&#39;]})&amp;quot;)
+assert( abs(test[&#39;L&#39;] - 54.244) &amp;gt; 0.001 ), &amp;quot;Your &#39;L&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;a&#39;] - 59.314) &amp;gt; 0.001 ), &amp;quot;Your &#39;a&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;b&#39;] - 52.9799) &amp;gt; 0.001 ), &amp;quot;Your &#39;b&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+
+assert( abs(test[&#39;L&#39;] - 47.197) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;a&#39;] - 49.034) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;b&#39;] - 38.609) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png.&amp;quot;
+
+
+test2 = findAverageColor(lab1, 0, 0, 2, 2)
+
+print(f&amp;quot;{info} Your test.png values (0, 0) -&amp;gt; (2, 2): (L={test2[&#39;L&#39;]}, a={test2[&#39;a&#39;]}, b={test2[&#39;b&#39;]})&amp;quot;)
+assert( abs(test2[&#39;L&#39;] - 54.244) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+assert( abs(test2[&#39;a&#39;] - 59.314) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+assert( abs(test2[&#39;b&#39;] - 52.9799) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png when using only 2x2.&amp;quot;
+
+
+
+rgb3 = skimage.io.imread(&amp;quot;test3.png&amp;quot;)
+lab3 = skimage.color.rgb2lab(rgb3)
+test3 = findAverageColor(lab3, 0, 0, 4, 6)
+
+print(f&amp;quot;{info} Your test3.png values (0, 0) -&amp;gt; (4, 6): (L={test3[&#39;L&#39;]}, a={test3[&#39;a&#39;]}, b={test3[&#39;b&#39;]})&amp;quot;)
+assert( abs(test3[&#39;L&#39;] - 46.414) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;a&#39;] - 47.892) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;b&#39;] - 37.012) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test3.png.&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print()
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;ℹ Your test.png values (0, 0) -&amp;gt; (4, 4): (L=47.19722525581813, a=49.03421116311881, b=38.60877549417687)
+ℹ Your test.png values (0, 0) -&amp;gt; (2, 2): (L=54.244093289693964, a=59.3141053878179, b=52.979879933089656)
+ℹ Your test3.png values (0, 0) -&amp;gt; (4, 6): (L=46.41423991872082, a=47.89200069370779, b=37.011986112075455)
+
+🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;finding-the-best-match&#34;&gt;Finding the best match&lt;/h2&gt;
+&lt;p&gt;In Part 1, you saved a csv file of all tile images.  For this part, you will find the best tile image given an &lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, and &lt;code&gt;b&lt;/code&gt; value and your DataFrame, passed in as &lt;code&gt;df&lt;/code&gt;, in the same format as you saved in Part 1.&lt;/p&gt;
+&lt;p&gt;This function must return a new DataFrame with exactly one row that contains the best match out of all of the images in &lt;code&gt;df&lt;/code&gt; based on the Euclidean distance away from the provided (&lt;code&gt;L&lt;/code&gt;, &lt;code&gt;a&lt;/code&gt;, &lt;code&gt;b&lt;/code&gt;).  &lt;em&gt;(You should not remove rows from &lt;code&gt;df&lt;/code&gt; itself, as the same &lt;code&gt;df&lt;/code&gt; will be passed to you each time; make sure to assign your smallest one row to a new and differently named DataFrame.)&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;
+# Returns the filename for the image that is the best match given an L, a, and b value.
+def findBestMatch(df, L, a, b):
+    bestmatch = 10000
+    name = &amp;quot;nil&amp;quot;
+    for i in range(len(df)):
+        diff_L = abs(df[&#39;L&#39;][i] - L)
+        diff_a = abs(df[&#39;a&#39;][i] - a)
+        diff_b = abs(df[&#39;b&#39;][i] - b)
+        avg = pd.DataFrame([diff_L, diff_a, diff_b]).sum()
+        if float(avg) &amp;lt; float(bestmatch):
+            bestmatch = avg
+            name = df[&amp;quot;file&amp;quot;][i]
+    return df[df.file == name]
+    
+
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 2b ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+
+real_df = pd.DataFrame([
+    {&#39;file&#39;: &#39;test.png&#39;, &#39;L&#39;: 47.19722525581813, &#39;a&#39;: 49.03421116311881, &#39;b&#39;: 38.60877549417687},
+    {&#39;file&#39;: &#39;test2.png&#39;, &#39;L&#39;: 54.24409328969397, &#39;a&#39;: 59.3141053878179, &#39;b&#39;: 52.97987993308968},
+    {&#39;file&#39;: &#39;test3.png&#39;, &#39;L&#39;: 46.41423991872082, &#39;a&#39;: 47.89200069370779, &#39;b&#39;: 37.011986112075455}
+])
+
+bestMatch = findBestMatch(real_df, 0, 0, 0)
+assert(type(bestMatch) == type(pd.DataFrame())), &amp;quot;findBestMatch must return a DataFrame&amp;quot;
+assert(len(bestMatch) == 1), &amp;quot;findBestMatch must return exactly one best match&amp;quot;
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test3.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=0, a=0, b=0)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 47, 49, 38)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=47, a=49, b=38)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 54, 49, 38)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=54, a=49, b=38)&amp;quot;
+
+bestMatch = findBestMatch(real_df, 54, 49, 52)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test2.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=54, a=49, b=52)&amp;quot;
+
+bestMatch = findBestMatch(real_df, -100, -100, -100)
+assert(bestMatch[&#39;file&#39;].values[0] == &#39;test3.png&#39;), &amp;quot;findBestMatch did not return the best match for test (L=-100, a=-100, b=-100)&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;creating-your-mosaic&#34;&gt;Creating your mosaic!&lt;/h2&gt;
+&lt;p&gt;There are two majors values you can adjust:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;tilesAcross&lt;/code&gt; controls how many tiles should make up the width of the mosaic image.  The larger this number, the more tiles you will have, the better your image will look (assuming good tiles), but the slower this will run.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;code&gt;outputSize&lt;/code&gt; controls the size each tile image is drawn.  The larger this number, the more detail you will have in each tile image, the more you will be able to zoom in, but the bigger the output file will be in the end.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Adjust these values here:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# How many tiles across each row do you want in your final image?
+# ...this number is approximate, the exact tiles will find the best match to the size of your image around this number.
+tilesAcross = 200
+
+# How big should each tile be rendered in the masaic image?
+outputSize = 26
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, the following code uses your image from Part 1, your DataFrame of average colors for each image, the &lt;code&gt;findAverageColor&lt;/code&gt; function from Part 2a, and &lt;code&gt;findBestMatch&lt;/code&gt; function from Part 2b to draw a mosaic image!&lt;/p&gt;
+&lt;p&gt;Make sure to add the file you want to make a mosaic out of in &lt;code&gt;base.jpg&lt;/code&gt; and run this cell:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Load the saved image data (from Part 1)
+print(&amp;quot;Loading in saved average image values...&amp;quot;)
+df = pd.read_csv(&#39;tile-images.csv&#39;)
+
+# Load the moasic image:
+print(&amp;quot;Loading the base.jpg image...&amp;quot;)
+rgb = skimage.io.imread(&amp;quot;base.jpg&amp;quot;)
+lab = skimage.color.rgb2lab(rgb)
+w = len(lab)
+h = len(lab[0])
+
+# Ensure we have no half-tiles (this will cut off the edge of the photo if needed)
+tileSize = int(w / tilesAcross)
+w_tiles = int(w / tileSize)
+h_tiles = int(h / tileSize)
+w = w_tiles * tileSize
+h = h_tiles * tileSize
+
+# Create a final image of the correct size to draw the final mosaic on:
+baseImage = Image.new(&#39;RGB&#39;, (outputSize * h_tiles, outputSize * w_tiles))
+
+# Store images used to speed up processing (often once an image is used once, it will be used again):
+cache = {}
+
+print(f&amp;quot;Creating your moasic ({w_tiles} x {h_tiles} = {w_tiles * h_tiles} total tiles)...&amp;quot;)
+for x in range(0, w, tileSize):
+    for y in range(0, h, tileSize):
+        # Find the average color for the current tile:
+        tileAvgColor = findAverageColor(lab, x, y, tileSize, tileSize)
+        
+        # Find the best file match:
+        df_bestMatch = findBestMatch(df, tileAvgColor[&#39;L&#39;], tileAvgColor[&#39;a&#39;], tileAvgColor[&#39;b&#39;])
+        bestFileName = df_bestMatch[&#39;file&#39;].values[0]
+        
+        # load the iamge in and resize it to be a `outputSize` x `outputSize` (or get it from the cache)
+        if bestFileName in cache:
+            smallTile = cache[bestFileName]
+        else:
+            tileImage = Image.open(bestFileName)
+            tileW, tileH = tileImage.size
+            tileD = min(tileW, tileH)
+            smallTile = tileImage.crop( (0, 0, tileD, tileD) ).resize( (outputSize, outputSize), resample=PIL.Image.LANCZOS )
+            cache[bestFileName] = smallTile
+        
+        # Draw the tile:
+        baseImage.paste(smallTile, ( int((y / tileSize) * outputSize), int((x / tileSize) * outputSize)))
+        
+    # Print out a progress message:
+    completed = int((x / tileSize) + 1) * tileSize
+    pct = completed / (w_tiles * tileSize) * 100
+    sys.stdout.write(f&#39;\r  ...finished: {completed} / {w_tiles * tileSize} ({pct:.2f}%)&#39;)
+
+# Save the image as mosaic.jpg
+baseImage.save(&#39;mosaic.jpg&#39;)
+
+# Print a message:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(&amp;quot;&amp;quot;)
+print(&amp;quot;&amp;quot;)
+print(f&amp;quot;{tada} MOSAIC COMPLETE! {tada}&amp;quot;)
+print(&amp;quot;- See mosaic.jpg to see your mosaic!&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Loading in saved average image values...
+Loading the base.jpg image...
+Creating your moasic (206 x 161 = 33166 total tiles)...
+  ...finished: 412 / 412 (100.00%)
+
+🎉 MOSAIC COMPLETE! 🎉
+- See mosaic.jpg to see your moasic!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;results&#34;&gt;Results&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/img/mosaic.jpg&#34; alt=&#34;mosaic output&#34;&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Creating a Mosaic [Part. 1]</title>
+      <link>/post/mosaic01/</link>
+      <pubDate>Wed, 23 Oct 2019 00:00:00 +0000</pubDate>
+      <guid>/post/mosaic01/</guid>
+      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import skimage
+import skimage.io
+import pandas as pd
+
+import PIL
+from PIL import Image
+
+from os import listdir
+from os.path import isfile, join
+import sys
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;creating-a-mosaic---part-1&#34;&gt;Creating a Mosaic - Part 1&lt;/h1&gt;
+&lt;p&gt;To follow through, you can open 
+&lt;a href=&#34;https://github.com/vincentoktav/vincentoktav.github.io/tree/sources/content/post/mosaic&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;my&lt;/a&gt; github repository.&lt;/p&gt;
+&lt;h2 id=&#34;programming&#34;&gt;Programming!&lt;/h2&gt;
+&lt;p&gt;Create &lt;code&gt;findAverageImageColor&lt;/code&gt; function:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;def findAverageImageColor(fileName):
+    # Your code here!
+    sumL, suma, sumb = 0, 0, 0
+    count = 0
+    rgb = skimage.io.imread(fileName)
+    lab = skimage.color.rgb2lab(rgb)
+    width = len(lab)
+    height = len(lab[0])
+    for x in range(width):
+        for y in range(height):
+            L, a, b = lab[x][y]
+            sumL += L
+            suma += a
+            sumb += b
+            count += 1
+            
+    return {&#39;L&#39;: sumL/count, &#39;a&#39;: suma/count, &#39;b&#39;: sumb/count}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;test-cases&#34;&gt;Test Cases&lt;/h3&gt;
+&lt;p&gt;These test cases help you debug your code to make sure you&amp;rsquo;re finding the correct average values for known images.  After you pass these test cases, then you&amp;rsquo;ll start using your own images! :)&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;## == TEST CASES for Part 1c ==
+# - This read-only cell contains test cases for your previous cell(s).
+# - If this cell runs without any errors in the output, you PASSED all test cases!
+# - If this cell results errors, check you previous cell, make changes, and RE-RUN your code and then this cell.
+info = &#39;\N{INFORMATION SOURCE}&#39;
+test = findAverageImageColor(&#39;test.png&#39;)
+
+assert( test != None ), &amp;quot;Your findAverageImageColor function must return a value (right now it&#39;s returning nothing).&amp;quot;
+assert( type(test) == type({}) ), f&amp;quot;Your findAverageImageColor function must return a dictionary (right now it&#39;s returning {type(test)}).&amp;quot;
+
+assert( &#39;L&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;L&#39;.&amp;quot;
+assert( &#39;a&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;a&#39;.&amp;quot;
+assert( &#39;b&#39; in test ), &amp;quot;Your findAverageImageColor must return a value for &#39;b&#39;.&amp;quot;
+
+print(f&amp;quot;{info} Your test.png values: (L={test[&#39;L&#39;]}, a={test[&#39;a&#39;]}, b={test[&#39;b&#39;]})&amp;quot;)
+assert( abs(test[&#39;L&#39;] - 54.244) &amp;gt; 0.001 ), &amp;quot;Your &#39;L&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;a&#39;] - 59.314) &amp;gt; 0.001 ), &amp;quot;Your &#39;a&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+assert( abs(test[&#39;b&#39;] - 52.9799) &amp;gt; 0.001 ), &amp;quot;Your &#39;b&#39; value is the value of only orange pixels.  Are you sure you are visiting every pixel?&amp;quot;
+
+assert( abs(test[&#39;L&#39;] - 47.197) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;a&#39;] - 49.034) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test.png.&amp;quot;
+assert( abs(test[&#39;b&#39;] - 38.609) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test.png.&amp;quot;
+
+
+test2 = findAverageImageColor(&#39;test2.png&#39;)
+
+print(f&amp;quot;{info} Your test2.png values: (L={test2[&#39;L&#39;]}, a={test2[&#39;a&#39;]}, b={test2[&#39;b&#39;]})&amp;quot;)
+assert( abs(test2[&#39;L&#39;] - 54.244) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test2.png.&amp;quot;
+assert( abs(test2[&#39;a&#39;] - 59.314) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test2.png.&amp;quot;
+assert( abs(test2[&#39;b&#39;] - 52.9799) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test2.png.&amp;quot;
+
+
+test3 = findAverageImageColor(&#39;test3.png&#39;)
+
+print(f&amp;quot;{info} Your test3.png values: (L={test3[&#39;L&#39;]}, a={test3[&#39;a&#39;]}, b={test3[&#39;b&#39;]})&amp;quot;)
+assert( abs(test3[&#39;L&#39;] - 46.414) &amp;lt; 0.001 ), &amp;quot;Your &#39;L&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;a&#39;] - 47.892) &amp;lt; 0.001 ), &amp;quot;Your &#39;a&#39; value is not correct on test3.png.&amp;quot;
+assert( abs(test3[&#39;b&#39;] - 37.012) &amp;lt; 0.001 ), &amp;quot;Your &#39;b&#39; value is not correct on test3.png.&amp;quot;
+
+
+## == SUCCESS MESSAGE ==
+# You will only see this message (with the emoji showing) if you passed all test cases:
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print()
+print(f&amp;quot;{tada} All tests passed! {tada}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;ℹ Your test.png values: (L=47.19722525581813, a=49.03421116311881, b=38.60877549417687)
+ℹ Your test2.png values: (L=54.24409328969397, a=59.3141053878179, b=52.97987993308968)
+ℹ Your test3.png values: (L=46.41423991872082, a=47.89200069370779, b=37.011986112075455)
+
+🎉 All tests passed! 🎉
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;your-images&#34;&gt;Your Images&lt;/h2&gt;
+&lt;p&gt;Once your function works and passes all the test cases, this code loads all files in the &lt;code&gt;tile-images&lt;/code&gt; folder and stores the average color value of the image in &lt;code&gt;tile-images.csv&lt;/code&gt;.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This code is already complete, but depends on a correct &lt;code&gt;findAverageImageColor&lt;/code&gt; function!&lt;/li&gt;
+&lt;li&gt;Make sure your code is complete before running this function!&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# What directory includes the images?
+imageDir = &amp;quot;tile-images&amp;quot;
+
+# Finds all files inside of `imageDir`:
+files = [imageDir + &amp;quot;/&amp;quot; + f for f in listdir(imageDir + &amp;quot;/&amp;quot;) if isfile(join(imageDir + &amp;quot;/&amp;quot;, f))]
+
+# Use `data` to store data about every image:
+data = []
+
+# Loop through every file:
+print(f&amp;quot;Starting to process {len(files)} files...&amp;quot;)
+for file in files:
+    try:
+        # Run `findAverageImageColor` and store the result:
+        result = findAverageImageColor(file)
+        d = { &#39;file&#39;: file, &#39;L&#39;: result[&#39;L&#39;], &#39;a&#39;: result[&#39;a&#39;], &#39;b&#39;: result[&#39;b&#39;] }
+        data.append(d)
+        pct = len(data) / len(files) * 100
+        sys.stdout.write(f&amp;quot;\r  ... {len(data)} / {len(files)} total files processed ({pct:.2f}%)&amp;quot;)
+    except ValueError as e:
+        print(f&amp;quot;!! {file} failed to process (this can happen if the image is black/white and has no color data?)&amp;quot;)
+        print(&amp;quot;...if so, remove the image and run again.&amp;quot;)
+        print(repr(e))
+        break
+                
+# Save the data as a DataFrame and CSV file:
+df = pd.DataFrame(data)
+df.to_csv(&#39;tile-images.csv&#39;)
+df
+
+tada = &amp;quot;\N{PARTY POPPER}&amp;quot;
+print(&amp;quot;&amp;quot;)
+print(&amp;quot;&amp;quot;)
+print(f&amp;quot;{tada} Image data saved as &amp;quot;&amp;quot;tile-images.csv&amp;quot;&amp;quot;&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Starting to process 2113 files...
+  ... 2113 / 2113 total files processed (100.00%)
+
+🎉 Image data saved as tile-images.csv
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;continue-to-part-2&#34;&gt;Continue to Part 2&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Part 2 will use the CSV file you saved, &lt;code&gt;tile-images.csv&lt;/code&gt;, to build your image mosaic!&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
   </channel>
 </rss>

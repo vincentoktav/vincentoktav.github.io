@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R | Vincent Oktavianus</title>
+    <link>/tags/r/</link>
+      <atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <description>R</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Sun, 08 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>R</title>
+      <link>/tags/r/</link>
+    </image>
+    
+    <item>
+      <title>Play a Roulette</title>
+      <link>/post/play-a-roulette/</link>
+      <pubDate>Sun, 08 Mar 2020 00:00:00 +0000</pubDate>
+      <guid>/post/play-a-roulette/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Are Sleep Trackers Effective?</title>
+      <link>/post/are-sleep-trackers-effective/</link>
+      <pubDate>Wed, 18 Sep 2019 00:00:00 +0000</pubDate>
+      <guid>/post/are-sleep-trackers-effective/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#abstract&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;1&lt;/span&gt; Abstract&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;2&lt;/span&gt; Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#methods&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;3&lt;/span&gt; Methods&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#results&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;4&lt;/span&gt; Results&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#discussion&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;5&lt;/span&gt; Discussion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#appendix&#34;&gt;&lt;span class=&#34;toc-section-number&#34;&gt;6&lt;/span&gt; Appendix&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;hr /&gt;
+&lt;div id=&#34;abstract&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;1&lt;/span&gt; Abstract&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Personal sleep tracking devices are becoming more and more popular. Statistical learning techniques are used to determine if it is possible to effectively predict time asleep from data that would be available without the aid of a sleep tracker.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;2&lt;/span&gt; Introduction&lt;/h1&gt;
+&lt;p&gt;It is without question that sleep is a very important process for both learning and memory. &lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; For optimal learning, sleep, both in quality and quantity, is required before and after learning. Depending on certain demographic factors, there are different sleep prescriptions, but for adults, a minimum of seven hours is needed to avoid impairment. &lt;a href=&#34;#fn2&#34; class=&#34;footnote-ref&#34; id=&#34;fnref2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt; Recently, the link between shift work and cancer has been well established. While more study is needed, there seems to be growing evidence that lack of sleep may play a strong causal role in many cancers. &lt;a href=&#34;#fn3&#34; class=&#34;footnote-ref&#34; id=&#34;fnref3&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt; As the public has become more aware of the importance of sleep, the use of “smart” devices to track sleep has risen. Many sleep trackers provide a wealth of information including not only time asleep, but also details such as time spent in the various stages of sleep. (Light, deep, REM.)&lt;/p&gt;
+&lt;p&gt;The effectiveness of these sleep devices is still in question. &lt;a href=&#34;#fn4&#34; class=&#34;footnote-ref&#34; id=&#34;fnref4&#34;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt; While the breadth of data that they make available is interesting, the most important by far is the total time asleep. (Asleep being defined clinically, not by simply being in bed.) The additional data, such as time in REM sleep, is interesting, however it is unclear what the target values should be, and more importantly, how we could affect change in these numbers. In contrast, there is a wealth of advice on how to increase quality and time spent asleep. &lt;a href=&#34;#fn5&#34; class=&#34;footnote-ref&#34; id=&#34;fnref5&#34;&gt;&lt;sup&gt;5&lt;/sup&gt;&lt;/a&gt; If total time asleep is the only data worth tracking, is a smart device actually necessary? Is it possible to estimate time asleep based on simple metrics such as time spent in bed?&lt;/p&gt;
+&lt;p&gt;Statistical learning techniques were applied to a four month sample of data from a Fitbit &lt;a href=&#34;#fn6&#34; class=&#34;footnote-ref&#34; id=&#34;fnref6&#34;&gt;&lt;sup&gt;6&lt;/sup&gt;&lt;/a&gt; user. Time spent in bed was used to predict total time asleep. The results indicate that this prediction can be made with a reasonably small amount of error. However, practical and statistical limitations suggest the need for further investigation.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;methods&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;3&lt;/span&gt; Methods&lt;/h1&gt;
+&lt;div id=&#34;data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.1&lt;/span&gt; Data&lt;/h2&gt;
+&lt;p&gt;The data was accessed via the data export tool provided by Fitbit. &lt;a href=&#34;#fn7&#34; class=&#34;footnote-ref&#34; id=&#34;fnref7&#34;&gt;&lt;sup&gt;7&lt;/sup&gt;&lt;/a&gt; It was collected using a Fitbit Versa 2 by a single subject, a 32 year old adult male living in Ohio and working as a professor. The Fitbit Versa 2 uses both motion and heart rate variability &lt;a href=&#34;#fn8&#34; class=&#34;footnote-ref&#34; id=&#34;fnref8&#34;&gt;&lt;sup&gt;8&lt;/sup&gt;&lt;/a&gt; to predict when the user is sleeping. The collection dates were a series of consecutive days in autumn of 2018. The two quantities of interest in the data are the time spent asleep and the time spent in bed each time the user sleeps. (A user could sleep more than once a day. For example, a two hour nap in the afternoon.) If the former can be predicted from the latter, the device seems unnecessary. (Time spent in bed could simply be tracked manually by a user. Although, it should be noted that one of the benefits of the devices is the automatic tracking of this quantity, which is probably more accurate than manual human tracking.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.2&lt;/span&gt; Modeling&lt;/h2&gt;
+&lt;p&gt;In order to predict time asleep given time in bed, three modeling techniques were considered: linear models, k-nearest neighbors models, and tree models. No transformations were considered with the linear model. Default tuning parameters were used to train the two non-parametric models. Only time in bed was used as a predictor variable.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;evaluation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;3.3&lt;/span&gt; Evaluation&lt;/h2&gt;
+&lt;p&gt;To evaluate the ability to predict time asleep with these models, the data was split into estimation, validation, and testing sets. Because of the dependence structure of the data, that is the consecutive nature of the days, the data was split chronologically. That is, the test set is the last 20% of the data chronologically. (And similarly for the validation data.) This is done to evaluate the ability to predict future nights of sleep from past data. Error metrics and graphics are reported using the validation data in the Results section.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;results&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;4&lt;/span&gt; Results&lt;/h1&gt;
+&lt;table class=&#34;table table-striped&#34; style=&#34;width: auto !important; margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+model
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+rmse
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Linear
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8.444805
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+K-Nearest Neighbors
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+11.692058
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Tree
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+15.112509
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-09-18-are-sleep-trackers-effective/index_files/figure-html/graphical-results-1.png&#34; width=&#34;1152&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;discussion&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;5&lt;/span&gt; Discussion&lt;/h1&gt;
+&lt;p&gt;After calculating the Rooted Mean Squared Error (RMSE) which gives us an estimate of the average squared prediction error in the original units used by the response variable for the validation data, we can see that the &lt;strong&gt;linear model&lt;/strong&gt; (without transformation) possess the lowest value of RMSE.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 9.1931&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Shown above is the value for our Test RMSE. In our linear model, the test RMSE and our validation RMSE is very similar which means there might be a little to no chance of overfit. Moreover, the plot for our linear model looks reasonable enough. Therefore, the linear model is our best model.&lt;/p&gt;
+&lt;p&gt;We are trying to predict the total sleep time based only the past data and one predictor which is very hard if we do not account a seasonal factor that could potentially result in limitations of our analysis. For instance, there might be a day where the observed person is very tired thus, he only spends a very little time in bed (’time_bed’) before he fell asleep. The inability to adjust our analysis to the seasonality effects may lead to false interpretations of the results from the analysis. Therefore, due to the RMSE value and limitations, using sleep tracking devices are still the best way to track our total sleep time even though our prediction is close enough to the actual value.&lt;/p&gt;
+&lt;p&gt;Future directions:
+We should consider using more variable as our predictor and also put the seasonal factor into account. By doing so we might further increase the accuracy of our predicted values.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;appendix&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;span class=&#34;header-section-number&#34;&gt;6&lt;/span&gt; Appendix&lt;/h1&gt;
+&lt;div id=&#34;data-dictionary&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;6.1&lt;/span&gt; Data Dictionary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;start_time&lt;/code&gt; - The date and time which the device detected the user has gone to bed due to lack of motion. (But not necessarily started sleep.)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;end_time&lt;/code&gt; - The date and time which the device detected that the user is no longer in bed, due to motion.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_asleep&lt;/code&gt; - The total sleep time, in minutes. This is meant to estimate a clinical measure of sleep. (Not simply time in bed.)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_awake&lt;/code&gt; - The time spent in bed, but awake, in minutes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;num_awake&lt;/code&gt; - The number of times the user “awoke” during their time in bed.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;time_bed&lt;/code&gt; - Duration between &lt;code&gt;start_time&lt;/code&gt; and &lt;code&gt;end_time&lt;/code&gt;. The sum of &lt;code&gt;min_asleep&lt;/code&gt; and &lt;code&gt;min_awake&lt;/code&gt;. In other words, total time in bed, in minutes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_rem&lt;/code&gt; - Total time spent in REM sleep, in minutes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_light&lt;/code&gt; - Total time spent in light sleep, in minutes.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;min_deep&lt;/code&gt; - Total time spent in deep sleep, in minutes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;eda&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;span class=&#34;header-section-number&#34;&gt;6.2&lt;/span&gt; EDA&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2019-09-18-are-sleep-trackers-effective/index_files/figure-html/eda-plots-1.png&#34; width=&#34;1152&#34; style=&#34;display: block; margin: auto;&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;&lt;a href=&#34;http://healthysleep.med.harvard.edu/healthy/matters/benefits-of-sleep/learning-memory&#34;&gt;Harvard Medicine: Sleep, Learning, and Memory&lt;/a&gt;&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html&#34;&gt;CDC: How Much Sleep Do I Need?&lt;/a&gt;&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2954516/&#34;&gt;Shift Work and Cancer, The Evidence and the Challenge&lt;/a&gt;&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.tandfonline.com/doi/abs/10.1586/17434440.2016.1171708&#34;&gt;Consumer sleep tracking devices: a review of mechanisms, validity and utility&lt;/a&gt;&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn5&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://news.berkeley.edu/2017/10/17/whywesleep/&#34;&gt;Everything you need to know about sleep, but are too tired to ask&lt;/a&gt;&lt;a href=&#34;#fnref5&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn6&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Fitbit&#34;&gt;Wikipedia: Fitbit&lt;/a&gt;&lt;a href=&#34;#fnref6&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn7&#34;&gt;&lt;p&gt;The author would like to note that Fitbit makes it incredibly difficult for users to obtain their own data.&lt;a href=&#34;#fnref7&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn8&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://en.m.wikipedia.org/wiki/Heart_rate_variability&#34;&gt;Wikipedia: Heart rate variability&lt;/a&gt;&lt;a href=&#34;#fnref8&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

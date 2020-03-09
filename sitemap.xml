@@ -28,13 +28,103 @@
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <loc>/categories/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/writing-technical-content/</loc>
-    <lastmod>2019-07-12T00:00:00+00:00</lastmod>
+    <loc>/post/play-a-roulette/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/r/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-03-08T19:27:02-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/vincent/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/wine-eda/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/eda/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/eda/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/linear-regression/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/plot/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/python/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/regression/</loc>
+    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/mosaic02/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/python/</loc>
+    <lastmod>2019-10-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/mosaic01/</loc>
+    <lastmod>2019-10-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/are-sleep-trackers-effective/</loc>
+    <lastmod>2019-09-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/modeling/</loc>
+    <lastmod>2019-09-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -49,17 +139,12 @@
   
   <url>
     <loc>/authors/admin/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/publication/preprint/</loc>
     <lastmod>2019-04-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -75,16 +160,6 @@
   <url>
     <loc>/tags/source-themes/</loc>
     <lastmod>2019-04-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/jupyter/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -138,26 +213,6 @@
   </url>
   
   <url>
-    <loc>/tags/academic/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/getting-started/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/demo/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/publication_types/2/</loc>
     <lastmod>2015-09-01T00:00:00+00:00</lastmod>
   </url>
@@ -173,31 +228,6 @@
   </url>
   
   <url>
-    <loc>/post/2015-07-23-r-rmarkdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/plot/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/r/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r-markdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/regression/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/publication_types/1/</loc>
     <lastmod>2013-07-01T00:00:00+00:00</lastmod>
   </url>
@@ -208,7 +238,7 @@
   </url>
   
   <url>
-    <loc>/authors/vincent/</loc>
+    <loc>/authors/lance/</loc>
   </url>
   
   <url>
@@ -217,6 +247,10 @@
   
   <url>
     <loc>/contact/</loc>
+  </url>
+  
+  <url>
+    <loc>/lancelot/</loc>
   </url>
   
 </urlset>
