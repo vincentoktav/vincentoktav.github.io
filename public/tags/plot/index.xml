@@ -5,7 +5,7 @@
     <link>/tags/plot/</link>
       <atom:link href="/tags/plot/index.xml" rel="self" type="application/rss+xml" />
     <description>plot</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Sat, 07 Dec 2019 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>plot</title>
@@ -13,52 +13,851 @@
     </image>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>
+      <title>Basic Exploratory Data Analysis and Simple Linear Regression in Python</title>
+      <link>/post/wine-eda/</link>
+      <pubDate>Sat, 07 Dec 2019 00:00:00 +0000</pubDate>
+      <guid>/post/wine-eda/</guid>
+      <description>&lt;h1 id=&#34;import-library&#34;&gt;Import Library&lt;/h1&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import math
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
 
+# Visulaization options:
+%matplotlib inline
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;read-data&#34;&gt;Read data&lt;/h1&gt;
+&lt;h3 id=&#34;data-obtained-from-uci-machine-learning-repository--accessed-via-kaggle-httpswwwkagglecomucimlred-wine-quality-cortez-et-al-2009&#34;&gt;Data obtained from UCI Machine Learning Repository &amp;amp; accessed via Kaggle (&lt;a href=&#34;https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009&#34;&gt;https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009&lt;/a&gt;)&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df = pd.read_csv(&amp;quot;redwine.csv&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
 
-&lt;div id=&#34;r-markdown&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;R Markdown&lt;/h1&gt;
-&lt;p&gt;This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see &lt;a href=&#34;http://rmarkdown.rstudio.com&#34; class=&#34;uri&#34;&gt;http://rmarkdown.rstudio.com&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;You can embed an R code chunk like this:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(cars)
-##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00
-fit &amp;lt;- lm(dist ~ speed, data = cars)
-fit
-## 
-## Call:
-## lm(formula = dist ~ speed, data = cars)
-## 
-## Coefficients:
-## (Intercept)        speed  
-##     -17.579        3.932&lt;/code&gt;&lt;/pre&gt;
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;0&lt;/td&gt;
+      &lt;td&gt;7.4&lt;/td&gt;
+      &lt;td&gt;0.700&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;34.0&lt;/td&gt;
+      &lt;td&gt;0.99780&lt;/td&gt;
+      &lt;td&gt;3.51&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;9.4&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;7.8&lt;/td&gt;
+      &lt;td&gt;0.880&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;2.6&lt;/td&gt;
+      &lt;td&gt;0.098&lt;/td&gt;
+      &lt;td&gt;25.0&lt;/td&gt;
+      &lt;td&gt;67.0&lt;/td&gt;
+      &lt;td&gt;0.99680&lt;/td&gt;
+      &lt;td&gt;3.20&lt;/td&gt;
+      &lt;td&gt;0.68&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;7.8&lt;/td&gt;
+      &lt;td&gt;0.760&lt;/td&gt;
+      &lt;td&gt;0.04&lt;/td&gt;
+      &lt;td&gt;2.3&lt;/td&gt;
+      &lt;td&gt;0.092&lt;/td&gt;
+      &lt;td&gt;15.0&lt;/td&gt;
+      &lt;td&gt;54.0&lt;/td&gt;
+      &lt;td&gt;0.99700&lt;/td&gt;
+      &lt;td&gt;3.26&lt;/td&gt;
+      &lt;td&gt;0.65&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;11.2&lt;/td&gt;
+      &lt;td&gt;0.280&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.075&lt;/td&gt;
+      &lt;td&gt;17.0&lt;/td&gt;
+      &lt;td&gt;60.0&lt;/td&gt;
+      &lt;td&gt;0.99800&lt;/td&gt;
+      &lt;td&gt;3.16&lt;/td&gt;
+      &lt;td&gt;0.58&lt;/td&gt;
+      &lt;td&gt;9.8&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;7.4&lt;/td&gt;
+      &lt;td&gt;0.700&lt;/td&gt;
+      &lt;td&gt;0.00&lt;/td&gt;
+      &lt;td&gt;1.9&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;34.0&lt;/td&gt;
+      &lt;td&gt;0.99780&lt;/td&gt;
+      &lt;td&gt;3.51&lt;/td&gt;
+      &lt;td&gt;0.56&lt;/td&gt;
+      &lt;td&gt;9.4&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+      &lt;td&gt;...&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1594&lt;/td&gt;
+      &lt;td&gt;6.2&lt;/td&gt;
+      &lt;td&gt;0.600&lt;/td&gt;
+      &lt;td&gt;0.08&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;0.090&lt;/td&gt;
+      &lt;td&gt;32.0&lt;/td&gt;
+      &lt;td&gt;44.0&lt;/td&gt;
+      &lt;td&gt;0.99490&lt;/td&gt;
+      &lt;td&gt;3.45&lt;/td&gt;
+      &lt;td&gt;0.58&lt;/td&gt;
+      &lt;td&gt;10.5&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1595&lt;/td&gt;
+      &lt;td&gt;5.9&lt;/td&gt;
+      &lt;td&gt;0.550&lt;/td&gt;
+      &lt;td&gt;0.10&lt;/td&gt;
+      &lt;td&gt;2.2&lt;/td&gt;
+      &lt;td&gt;0.062&lt;/td&gt;
+      &lt;td&gt;39.0&lt;/td&gt;
+      &lt;td&gt;51.0&lt;/td&gt;
+      &lt;td&gt;0.99512&lt;/td&gt;
+      &lt;td&gt;3.52&lt;/td&gt;
+      &lt;td&gt;0.76&lt;/td&gt;
+      &lt;td&gt;11.2&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1596&lt;/td&gt;
+      &lt;td&gt;6.3&lt;/td&gt;
+      &lt;td&gt;0.510&lt;/td&gt;
+      &lt;td&gt;0.13&lt;/td&gt;
+      &lt;td&gt;2.3&lt;/td&gt;
+      &lt;td&gt;0.076&lt;/td&gt;
+      &lt;td&gt;29.0&lt;/td&gt;
+      &lt;td&gt;40.0&lt;/td&gt;
+      &lt;td&gt;0.99574&lt;/td&gt;
+      &lt;td&gt;3.42&lt;/td&gt;
+      &lt;td&gt;0.75&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1597&lt;/td&gt;
+      &lt;td&gt;5.9&lt;/td&gt;
+      &lt;td&gt;0.645&lt;/td&gt;
+      &lt;td&gt;0.12&lt;/td&gt;
+      &lt;td&gt;2.0&lt;/td&gt;
+      &lt;td&gt;0.075&lt;/td&gt;
+      &lt;td&gt;32.0&lt;/td&gt;
+      &lt;td&gt;44.0&lt;/td&gt;
+      &lt;td&gt;0.99547&lt;/td&gt;
+      &lt;td&gt;3.57&lt;/td&gt;
+      &lt;td&gt;0.71&lt;/td&gt;
+      &lt;td&gt;10.2&lt;/td&gt;
+      &lt;td&gt;5&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1598&lt;/td&gt;
+      &lt;td&gt;6.0&lt;/td&gt;
+      &lt;td&gt;0.310&lt;/td&gt;
+      &lt;td&gt;0.47&lt;/td&gt;
+      &lt;td&gt;3.6&lt;/td&gt;
+      &lt;td&gt;0.067&lt;/td&gt;
+      &lt;td&gt;18.0&lt;/td&gt;
+      &lt;td&gt;42.0&lt;/td&gt;
+      &lt;td&gt;0.99549&lt;/td&gt;
+      &lt;td&gt;3.39&lt;/td&gt;
+      &lt;td&gt;0.66&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;6&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;1599 rows × 12 columns&lt;/p&gt;
 &lt;/div&gt;
-&lt;div id=&#34;including-plots&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Including Plots&lt;/h1&gt;
-&lt;p&gt;You can also embed plots. See Figure &lt;a href=&#34;#fig:pie&#34;&gt;1&lt;/a&gt; for example:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mar = c(0, 1, 0, 1))
-pie(
-  c(280, 60, 20),
-  c(&amp;#39;Sky&amp;#39;, &amp;#39;Sunny side of pyramid&amp;#39;, &amp;#39;Shady side of pyramid&amp;#39;),
-  col = c(&amp;#39;#0292D8&amp;#39;, &amp;#39;#F7EA39&amp;#39;, &amp;#39;#C4B632&amp;#39;),
-  init.angle = -50, border = NA
-)&lt;/code&gt;&lt;/pre&gt;
-&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:pie&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/pie-1.png&#34; alt=&#34;A fancy pie chart.&#34; width=&#34;672&#34; /&gt;
-&lt;p class=&#34;caption&#34;&gt;
-Figure 1: A fancy pie chart.
-&lt;/p&gt;
+&lt;h2 id=&#34;data-description&#34;&gt;Data Description&lt;/h2&gt;
+&lt;p&gt;Accessed via Kaggle&lt;/p&gt;
+&lt;h3 id=&#34;about&#34;&gt;About&lt;/h3&gt;
+&lt;p&gt;The dataset is related to red variants of the Portuguese &lt;strong&gt;&amp;ldquo;Vinho Verde&amp;rdquo;&lt;/strong&gt; wine. For more details, consult the reference [Cortez et al., 2009]. Due to privacy and logistic issues, only physicochemical (inputs) and sensory (the output) variables are available (e.g. there is no data about grape types, wine brand, wine selling price, etc.).&lt;/p&gt;
+&lt;h3 id=&#34;input-variables-based-on-physicochemical-tests&#34;&gt;Input variables (based on physicochemical tests):&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fixed acidity&lt;/code&gt; : most acids involved with wine or fixed or nonvolatile (do not evaporate readily).&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;volatile acidity&lt;/code&gt; : the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;citric acid&lt;/code&gt; : found in small quantities, citric acid can add &amp;lsquo;freshness&amp;rsquo; and flavor to wines.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;residual sugar&lt;/code&gt; : the amount of sugar remaining after fermentation stops, it&amp;rsquo;s rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;chlorides&lt;/code&gt; : the amount of salt in the wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;free sulfur dioxide&lt;/code&gt; : the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;total sulfur dioxide&lt;/code&gt; : amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;density&lt;/code&gt; : the density of water is close to that of water depending on the percent alcohol and sugar content.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pH&lt;/code&gt; : describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sulphates&lt;/code&gt; : a wine additive which can contribute to sulfur dioxide gas (S02) levels, which acts as an antimicrobial and antioxidant.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;alcohol&lt;/code&gt; : the percent alcohol content of the wine.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;output-variable-based-on-sensory-data&#34;&gt;Output variable (based on sensory data):&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;quality&lt;/code&gt; : score between 0 and 10 given by human wine tasters.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exploratory-data-analysis-eda&#34;&gt;Exploratory Data Analysis (EDA)&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out dataframe dimension or shape (rows x columns)
+df.shape
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;(1599, 12)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out information on the data
+df.info()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;class &#39;pandas.core.frame.DataFrame&#39;&amp;gt;
+RangeIndex: 1599 entries, 0 to 1598
+Data columns (total 12 columns):
+fixed acidity           1599 non-null float64
+volatile acidity        1599 non-null float64
+citric acid             1599 non-null float64
+residual sugar          1599 non-null float64
+chlorides               1599 non-null float64
+free sulfur dioxide     1599 non-null float64
+total sulfur dioxide    1599 non-null float64
+density                 1599 non-null float64
+pH                      1599 non-null float64
+sulphates               1599 non-null float64
+alcohol                 1599 non-null float64
+quality                 1599 non-null int64
+dtypes: float64(11), int64(1)
+memory usage: 150.0 KB
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out summary information about all numeric data columns in your dataset.
+df.describe()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;count&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+      &lt;td&gt;1599.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;mean&lt;/td&gt;
+      &lt;td&gt;8.319637&lt;/td&gt;
+      &lt;td&gt;0.527821&lt;/td&gt;
+      &lt;td&gt;0.270976&lt;/td&gt;
+      &lt;td&gt;2.538806&lt;/td&gt;
+      &lt;td&gt;0.087467&lt;/td&gt;
+      &lt;td&gt;15.874922&lt;/td&gt;
+      &lt;td&gt;46.467792&lt;/td&gt;
+      &lt;td&gt;0.996747&lt;/td&gt;
+      &lt;td&gt;3.311113&lt;/td&gt;
+      &lt;td&gt;0.658149&lt;/td&gt;
+      &lt;td&gt;10.422983&lt;/td&gt;
+      &lt;td&gt;5.636023&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;std&lt;/td&gt;
+      &lt;td&gt;1.741096&lt;/td&gt;
+      &lt;td&gt;0.179060&lt;/td&gt;
+      &lt;td&gt;0.194801&lt;/td&gt;
+      &lt;td&gt;1.409928&lt;/td&gt;
+      &lt;td&gt;0.047065&lt;/td&gt;
+      &lt;td&gt;10.460157&lt;/td&gt;
+      &lt;td&gt;32.895324&lt;/td&gt;
+      &lt;td&gt;0.001887&lt;/td&gt;
+      &lt;td&gt;0.154386&lt;/td&gt;
+      &lt;td&gt;0.169507&lt;/td&gt;
+      &lt;td&gt;1.065668&lt;/td&gt;
+      &lt;td&gt;0.807569&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;min&lt;/td&gt;
+      &lt;td&gt;4.600000&lt;/td&gt;
+      &lt;td&gt;0.120000&lt;/td&gt;
+      &lt;td&gt;0.000000&lt;/td&gt;
+      &lt;td&gt;0.900000&lt;/td&gt;
+      &lt;td&gt;0.012000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+      &lt;td&gt;0.990070&lt;/td&gt;
+      &lt;td&gt;2.740000&lt;/td&gt;
+      &lt;td&gt;0.330000&lt;/td&gt;
+      &lt;td&gt;8.400000&lt;/td&gt;
+      &lt;td&gt;3.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;25%&lt;/td&gt;
+      &lt;td&gt;7.100000&lt;/td&gt;
+      &lt;td&gt;0.390000&lt;/td&gt;
+      &lt;td&gt;0.090000&lt;/td&gt;
+      &lt;td&gt;1.900000&lt;/td&gt;
+      &lt;td&gt;0.070000&lt;/td&gt;
+      &lt;td&gt;7.000000&lt;/td&gt;
+      &lt;td&gt;22.000000&lt;/td&gt;
+      &lt;td&gt;0.995600&lt;/td&gt;
+      &lt;td&gt;3.210000&lt;/td&gt;
+      &lt;td&gt;0.550000&lt;/td&gt;
+      &lt;td&gt;9.500000&lt;/td&gt;
+      &lt;td&gt;5.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;50%&lt;/td&gt;
+      &lt;td&gt;7.900000&lt;/td&gt;
+      &lt;td&gt;0.520000&lt;/td&gt;
+      &lt;td&gt;0.260000&lt;/td&gt;
+      &lt;td&gt;2.200000&lt;/td&gt;
+      &lt;td&gt;0.079000&lt;/td&gt;
+      &lt;td&gt;14.000000&lt;/td&gt;
+      &lt;td&gt;38.000000&lt;/td&gt;
+      &lt;td&gt;0.996750&lt;/td&gt;
+      &lt;td&gt;3.310000&lt;/td&gt;
+      &lt;td&gt;0.620000&lt;/td&gt;
+      &lt;td&gt;10.200000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;75%&lt;/td&gt;
+      &lt;td&gt;9.200000&lt;/td&gt;
+      &lt;td&gt;0.640000&lt;/td&gt;
+      &lt;td&gt;0.420000&lt;/td&gt;
+      &lt;td&gt;2.600000&lt;/td&gt;
+      &lt;td&gt;0.090000&lt;/td&gt;
+      &lt;td&gt;21.000000&lt;/td&gt;
+      &lt;td&gt;62.000000&lt;/td&gt;
+      &lt;td&gt;0.997835&lt;/td&gt;
+      &lt;td&gt;3.400000&lt;/td&gt;
+      &lt;td&gt;0.730000&lt;/td&gt;
+      &lt;td&gt;11.100000&lt;/td&gt;
+      &lt;td&gt;6.000000&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;max&lt;/td&gt;
+      &lt;td&gt;15.900000&lt;/td&gt;
+      &lt;td&gt;1.580000&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;15.500000&lt;/td&gt;
+      &lt;td&gt;0.611000&lt;/td&gt;
+      &lt;td&gt;72.000000&lt;/td&gt;
+      &lt;td&gt;289.000000&lt;/td&gt;
+      &lt;td&gt;1.003690&lt;/td&gt;
+      &lt;td&gt;4.010000&lt;/td&gt;
+      &lt;td&gt;2.000000&lt;/td&gt;
+      &lt;td&gt;14.900000&lt;/td&gt;
+      &lt;td&gt;8.000000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 &lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the distribution on each column (variable) 
+df.hist(bins = 50, edgecolor = &#39;b&#39;, grid = False,
+                linewidth = 1.0,
+                xlabelsize = 8, ylabelsize = 8,  
+                figsize = (16, 6), color = &#39;orange&#39;)    
+plt.tight_layout(rect = (0, 0, 1.5, 1.5))   
+plt.suptitle(&#39;Red Wine Plots&#39;, x = 0.75, y = 1.65, fontsize = 20);  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image1.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out histogram of the quality variable 
+df[&#39;quality&#39;].hist(bins = 6, grid = False, color = &#39;red&#39;, edgecolor = &#39;b&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a1f4fc438&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image2.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the correlation matrix (for each column)
+df.corr()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;fixed acidity&lt;/th&gt;
+      &lt;th&gt;volatile acidity&lt;/th&gt;
+      &lt;th&gt;citric acid&lt;/th&gt;
+      &lt;th&gt;residual sugar&lt;/th&gt;
+      &lt;th&gt;chlorides&lt;/th&gt;
+      &lt;th&gt;free sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;total sulfur dioxide&lt;/th&gt;
+      &lt;th&gt;density&lt;/th&gt;
+      &lt;th&gt;pH&lt;/th&gt;
+      &lt;th&gt;sulphates&lt;/th&gt;
+      &lt;th&gt;alcohol&lt;/th&gt;
+      &lt;th&gt;quality&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;fixed acidity&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.256131&lt;/td&gt;
+      &lt;td&gt;0.671703&lt;/td&gt;
+      &lt;td&gt;0.114777&lt;/td&gt;
+      &lt;td&gt;0.093705&lt;/td&gt;
+      &lt;td&gt;-0.153794&lt;/td&gt;
+      &lt;td&gt;-0.113181&lt;/td&gt;
+      &lt;td&gt;0.668047&lt;/td&gt;
+      &lt;td&gt;-0.682978&lt;/td&gt;
+      &lt;td&gt;0.183006&lt;/td&gt;
+      &lt;td&gt;-0.061668&lt;/td&gt;
+      &lt;td&gt;0.124052&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;volatile acidity&lt;/td&gt;
+      &lt;td&gt;-0.256131&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.552496&lt;/td&gt;
+      &lt;td&gt;0.001918&lt;/td&gt;
+      &lt;td&gt;0.061298&lt;/td&gt;
+      &lt;td&gt;-0.010504&lt;/td&gt;
+      &lt;td&gt;0.076470&lt;/td&gt;
+      &lt;td&gt;0.022026&lt;/td&gt;
+      &lt;td&gt;0.234937&lt;/td&gt;
+      &lt;td&gt;-0.260987&lt;/td&gt;
+      &lt;td&gt;-0.202288&lt;/td&gt;
+      &lt;td&gt;-0.390558&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;citric acid&lt;/td&gt;
+      &lt;td&gt;0.671703&lt;/td&gt;
+      &lt;td&gt;-0.552496&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.143577&lt;/td&gt;
+      &lt;td&gt;0.203823&lt;/td&gt;
+      &lt;td&gt;-0.060978&lt;/td&gt;
+      &lt;td&gt;0.035533&lt;/td&gt;
+      &lt;td&gt;0.364947&lt;/td&gt;
+      &lt;td&gt;-0.541904&lt;/td&gt;
+      &lt;td&gt;0.312770&lt;/td&gt;
+      &lt;td&gt;0.109903&lt;/td&gt;
+      &lt;td&gt;0.226373&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;residual sugar&lt;/td&gt;
+      &lt;td&gt;0.114777&lt;/td&gt;
+      &lt;td&gt;0.001918&lt;/td&gt;
+      &lt;td&gt;0.143577&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.055610&lt;/td&gt;
+      &lt;td&gt;0.187049&lt;/td&gt;
+      &lt;td&gt;0.203028&lt;/td&gt;
+      &lt;td&gt;0.355283&lt;/td&gt;
+      &lt;td&gt;-0.085652&lt;/td&gt;
+      &lt;td&gt;0.005527&lt;/td&gt;
+      &lt;td&gt;0.042075&lt;/td&gt;
+      &lt;td&gt;0.013732&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;chlorides&lt;/td&gt;
+      &lt;td&gt;0.093705&lt;/td&gt;
+      &lt;td&gt;0.061298&lt;/td&gt;
+      &lt;td&gt;0.203823&lt;/td&gt;
+      &lt;td&gt;0.055610&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.005562&lt;/td&gt;
+      &lt;td&gt;0.047400&lt;/td&gt;
+      &lt;td&gt;0.200632&lt;/td&gt;
+      &lt;td&gt;-0.265026&lt;/td&gt;
+      &lt;td&gt;0.371260&lt;/td&gt;
+      &lt;td&gt;-0.221141&lt;/td&gt;
+      &lt;td&gt;-0.128907&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;free sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.153794&lt;/td&gt;
+      &lt;td&gt;-0.010504&lt;/td&gt;
+      &lt;td&gt;-0.060978&lt;/td&gt;
+      &lt;td&gt;0.187049&lt;/td&gt;
+      &lt;td&gt;0.005562&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.667666&lt;/td&gt;
+      &lt;td&gt;-0.021946&lt;/td&gt;
+      &lt;td&gt;0.070377&lt;/td&gt;
+      &lt;td&gt;0.051658&lt;/td&gt;
+      &lt;td&gt;-0.069408&lt;/td&gt;
+      &lt;td&gt;-0.050656&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;total sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.113181&lt;/td&gt;
+      &lt;td&gt;0.076470&lt;/td&gt;
+      &lt;td&gt;0.035533&lt;/td&gt;
+      &lt;td&gt;0.203028&lt;/td&gt;
+      &lt;td&gt;0.047400&lt;/td&gt;
+      &lt;td&gt;0.667666&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.071269&lt;/td&gt;
+      &lt;td&gt;-0.066495&lt;/td&gt;
+      &lt;td&gt;0.042947&lt;/td&gt;
+      &lt;td&gt;-0.205654&lt;/td&gt;
+      &lt;td&gt;-0.185100&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;density&lt;/td&gt;
+      &lt;td&gt;0.668047&lt;/td&gt;
+      &lt;td&gt;0.022026&lt;/td&gt;
+      &lt;td&gt;0.364947&lt;/td&gt;
+      &lt;td&gt;0.355283&lt;/td&gt;
+      &lt;td&gt;0.200632&lt;/td&gt;
+      &lt;td&gt;-0.021946&lt;/td&gt;
+      &lt;td&gt;0.071269&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.341699&lt;/td&gt;
+      &lt;td&gt;0.148506&lt;/td&gt;
+      &lt;td&gt;-0.496180&lt;/td&gt;
+      &lt;td&gt;-0.174919&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;pH&lt;/td&gt;
+      &lt;td&gt;-0.682978&lt;/td&gt;
+      &lt;td&gt;0.234937&lt;/td&gt;
+      &lt;td&gt;-0.541904&lt;/td&gt;
+      &lt;td&gt;-0.085652&lt;/td&gt;
+      &lt;td&gt;-0.265026&lt;/td&gt;
+      &lt;td&gt;0.070377&lt;/td&gt;
+      &lt;td&gt;-0.066495&lt;/td&gt;
+      &lt;td&gt;-0.341699&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;-0.196648&lt;/td&gt;
+      &lt;td&gt;0.205633&lt;/td&gt;
+      &lt;td&gt;-0.057731&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;sulphates&lt;/td&gt;
+      &lt;td&gt;0.183006&lt;/td&gt;
+      &lt;td&gt;-0.260987&lt;/td&gt;
+      &lt;td&gt;0.312770&lt;/td&gt;
+      &lt;td&gt;0.005527&lt;/td&gt;
+      &lt;td&gt;0.371260&lt;/td&gt;
+      &lt;td&gt;0.051658&lt;/td&gt;
+      &lt;td&gt;0.042947&lt;/td&gt;
+      &lt;td&gt;0.148506&lt;/td&gt;
+      &lt;td&gt;-0.196648&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.093595&lt;/td&gt;
+      &lt;td&gt;0.251397&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;alcohol&lt;/td&gt;
+      &lt;td&gt;-0.061668&lt;/td&gt;
+      &lt;td&gt;-0.202288&lt;/td&gt;
+      &lt;td&gt;0.109903&lt;/td&gt;
+      &lt;td&gt;0.042075&lt;/td&gt;
+      &lt;td&gt;-0.221141&lt;/td&gt;
+      &lt;td&gt;-0.069408&lt;/td&gt;
+      &lt;td&gt;-0.205654&lt;/td&gt;
+      &lt;td&gt;-0.496180&lt;/td&gt;
+      &lt;td&gt;0.205633&lt;/td&gt;
+      &lt;td&gt;0.093595&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+      &lt;td&gt;0.476166&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;quality&lt;/td&gt;
+      &lt;td&gt;0.124052&lt;/td&gt;
+      &lt;td&gt;-0.390558&lt;/td&gt;
+      &lt;td&gt;0.226373&lt;/td&gt;
+      &lt;td&gt;0.013732&lt;/td&gt;
+      &lt;td&gt;-0.128907&lt;/td&gt;
+      &lt;td&gt;-0.050656&lt;/td&gt;
+      &lt;td&gt;-0.185100&lt;/td&gt;
+      &lt;td&gt;-0.174919&lt;/td&gt;
+      &lt;td&gt;-0.057731&lt;/td&gt;
+      &lt;td&gt;0.251397&lt;/td&gt;
+      &lt;td&gt;0.476166&lt;/td&gt;
+      &lt;td&gt;1.000000&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 &lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out correlation heatmap using &#39;seaborn&#39; library
+sns.heatmap(df.corr(), cmap = &amp;quot;YlGnBu&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a1fad1400&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image3.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;modeling&#34;&gt;Modeling&lt;/h1&gt;
+&lt;h2 id=&#34;using-linear-regression&#34;&gt;Using Linear Regression&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a linear regression model:
+model = LinearRegression()
+
+# Train (&amp;quot;fit&amp;quot;) the model:
+model = model.fit(df[ [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;] ], df[&#39;quality&#39;] )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the intercept:
+intercept = model.intercept_
+intercept
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;21.965208449448177
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# print out the slope (as table):
+slope = model.coef_
+
+coeff_df = pd.DataFrame(slope, [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;]  , columns = [&#39;Coefficient&#39;])  
+coeff_df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;div&gt;
+&lt;style scoped&gt;
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+&lt;pre&gt;&lt;code&gt;.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;/style&gt;&lt;/p&gt;
+&lt;table border=&#34;1&#34; class=&#34;dataframe&#34;&gt;
+  &lt;thead&gt;
+    &lt;tr style=&#34;text-align: right;&#34;&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;Coefficient&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;fixed acidity&lt;/td&gt;
+      &lt;td&gt;0.024991&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;volatile acidity&lt;/td&gt;
+      &lt;td&gt;-1.083590&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;citric acid&lt;/td&gt;
+      &lt;td&gt;-0.182564&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;residual sugar&lt;/td&gt;
+      &lt;td&gt;0.016331&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;chlorides&lt;/td&gt;
+      &lt;td&gt;-1.874225&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;free sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;0.004361&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;total sulfur dioxide&lt;/td&gt;
+      &lt;td&gt;-0.003265&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;density&lt;/td&gt;
+      &lt;td&gt;-17.881164&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;pH&lt;/td&gt;
+      &lt;td&gt;-0.413653&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;sulphates&lt;/td&gt;
+      &lt;td&gt;0.916334&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;alcohol&lt;/td&gt;
+      &lt;td&gt;0.276198&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# create prediction using our model
+df[&amp;quot;predicted&amp;quot;] = model.predict( df[ [&#39;fixed acidity&#39;, &#39;volatile acidity&#39;, &#39;citric acid&#39;, &#39;residual sugar&#39;, &#39;chlorides&#39;, &#39;free sulfur dioxide&#39;, &#39;total sulfur dioxide&#39;, &#39;density&#39;, &#39;pH&#39;, &#39;sulphates&#39;,&#39;alcohol&#39;] ] )
+
+df[&amp;quot;predicted&amp;quot;] = round(df[&amp;quot;predicted&amp;quot;], 0)
+df[&amp;quot;predicted&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;0       5.0
+1       5.0
+2       5.0
+3       6.0
+4       5.0
+       ... 
+1594    6.0
+1595    6.0
+1596    6.0
+1597    5.0
+1598    6.0
+Name: predicted, Length: 1599, dtype: float64
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h1 id=&#34;results&#34;&gt;Results&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;relationship-of-ph-and-fixed-acidity&#34;&gt;Relationship of &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the correlation matrix (in EDA section), we can see that &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt; have the highest correlation with the value of &lt;strong&gt;-0.682978&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# Create a scatter plot between &#39;pH&#39; (x-axis) and &#39;fixed acidity&#39;(y-axis). 
+df.plot.scatter(x = &#39;pH&#39;, y = &#39;fixed acidity&#39;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;matplotlib.axes._subplots.AxesSubplot at 0x1a2009fb00&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image4.png&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This negative correlation might be obvious and understandable since&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pH is the measure of acidity/basicity with a scale between 0 (very acid) and 14 (very basic) # information taken from chemistry class&lt;/li&gt;
+&lt;li&gt;so the more acidic is a solution, pH value will decrease.&lt;/li&gt;
+&lt;li&gt;as indicated in the data description, most wines are acidic and have pH values of 3-4 # in this data (lowest = 2.74 and highest = 4.01) obtained from EDA section.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Therefore, we can conclude that there is a causation between &lt;code&gt;pH&lt;/code&gt; and &lt;code&gt;fixed acidity&lt;/code&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;h3 id=&#34;relationship-of-quality-and-alcohol&#34;&gt;Relationship of &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt;&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;From the correlation matrix (in EDA section), we found out that &lt;code&gt;alcohol&lt;/code&gt; has the highest correlation with our target or response variable &lt;code&gt;quality&lt;/code&gt; with a value of &lt;strong&gt;0.476166&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# visualization using &#39;seaborn&#39; library for scatter plot between &#39;alcohol&#39; and &#39;quality&#39;
+sns.set()
+sns.relplot(data = df, x = &#39;alcohol&#39;, y = &#39;quality&#39;, kind = &#39;line&#39;, height = 6, aspect = 2, color = &#39;red&#39;);    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/img/image5.jpg&#34; alt=&#34;This is an image&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;The plot above clearly reflects the positive correlation between &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt;. Where an increase in the alcohol level (&lt;strong&gt;&amp;lt;&lt;/strong&gt; 14) &lt;strong&gt;might&lt;/strong&gt; result in a better wine quality.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;One important thing to mention is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;This might not be necessarily true&lt;/strong&gt; since there are cases where a higher quality level might result in lower wine quality. (in this dataset, for instance, a wine with 9% alcohol level has a lower quality than wine with 8% alcohol level).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;While there is a positive correlation between &lt;code&gt;quality&lt;/code&gt; and &lt;code&gt;alcohol&lt;/code&gt; their relationship does not indicate causality.&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;discussion&#34;&gt;Discussion&lt;/h1&gt;
+&lt;p&gt;The predictive ability of our model is very &lt;strong&gt;low&lt;/strong&gt; with an accuracy of only &lt;strong&gt;59.16%&lt;/strong&gt;. This means our model does a really bad job on predicting the wine quality.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;This bad results (predictive power) might be due to:
+&lt;ul&gt;
+&lt;li&gt;Limited predictor variable; in this dataset, we are only given variables that are based on physicochemical tests (lab tests such as alcohol percentage level, pH value, etc.).&lt;/li&gt;
+&lt;li&gt;There are many predictor variables that might be more helpful in order to predict the wine quality such as &lt;code&gt;grape type&lt;/code&gt;, &lt;code&gt;wine age&lt;/code&gt;, &lt;code&gt;vineyard location&lt;/code&gt;, and etc.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;# check our model accuracy
+(df[&amp;quot;predicted&amp;quot;] == df[&amp;quot;quality&amp;quot;]).mean()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;0.5916197623514696
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;solutions-and-recommendations&#34;&gt;Solutions and Recommendations:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Obtain more data (predictor variables and samples) and do another analysis.&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

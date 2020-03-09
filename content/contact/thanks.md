@@ -56,5 +56,3 @@ As thanks, here is a picture of my dog, have a wonderful day!
 </p>
 
 {{< figure src="lance.jpg" title="" lightbox="true" >}}
-
-***

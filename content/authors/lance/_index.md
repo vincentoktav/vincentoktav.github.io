@@ -1,0 +1,28 @@
+---
+authors:
+- lance
+bio: I'm lance.
+interests:
+- Wet food
+- Dog toys
+- Hiking
+name: Lancelot the Hustle
+role: Full-time dog / Full-time goofball
+social:
+- icon: instagram
+  icon_pack: fab
+  link: https://www.instagram.com/lancelotthehustle/
+- icon: dna
+  icon_pack: fas
+  link: https://my.embarkvet.com/dog/lancelot
+- icon: home
+  icon_pack: fas
+  link: https://www.google.com/maps/place/Irvine,+CA/data=!4m2!3m1!1s0x80dcdd0e689140e3:0xa77ab575604a9a39?sa=X&ved=2ahUKEwjn-NG3u4zoAhUGca0KHb9nAHQQ8gEwIHoECCIQBA
+superuser: false
+---
+
+### Dislikes
+- High-places
+- Shower
+- Lemon
+

@@ -10,7 +10,7 @@ a {
 a:active, 
 a:focus, 
 a:hover {
-  color: #d03b39;
+  color: #C70039;
 }
 
 /* nav */
@@ -47,7 +47,7 @@ a:hover {
 
 .navbar-light .navbar-brand:focus, 
 .navbar-light .navbar-brand:hover {
-  color: #d03b39;
+  color: #C70039;
 }
 
 /* text */
@@ -128,7 +128,7 @@ pre code {
 }
 
 code { 
-  color: #d03b39;
+  color: #E7221F;
   background: #fff;
   font-size: 0.9em;
 }
@@ -194,7 +194,7 @@ div.alert.alert-warning {
 }
 
 .btn {
-  font-family: Arapey;
+  font-family: Spartan;
   text-transform: lowercase;
   font-style: italic;
   border-radius: 0px;
@@ -227,13 +227,13 @@ div.universal-wrapper.pt-3 h1 {
 	margin-left: 10rem;
 	margin-right: 10rem;
 	padding-bottom: 68px;
-  border-bottom: 1px solid #e13d3d;
+  border-bottom: 1px solid #287EF7;
 }
 
 hr {
   border: 0;
   height: 1px;
-  background: #e13d3d;
+  background: #287EF7;
   background-image: none;
 }
 
@@ -267,17 +267,17 @@ iframe {
 /* pagination buttons */
 
 .page-link {
-	color: #e13d3d;
+	color: #287EF7;
 	background-color: #fbf9f4;
-	border: 1px solid #e13d3d;
+	border: 1px solid #287EF7;
   border-radius: 0px; /*undo rounded corners*/
 
 }
 
 .page-link:hover {
 	color: #fff;
-	background-color: #e13d3d;
-	border-color: #e13d3d;
+	background-color: #287EF7;
+	border-color: #287EF7;
 }
 
 .page-item:first-child .page-link {
@@ -293,11 +293,11 @@ iframe {
 /* dark fixes */
 
 .dark .pagination li > a, .pagination li > span {
-	border: 1px solid #e13d3d;
+	border: 1px solid #287EF7;
 }
 
 .dark .page-link:hover {
-	background-color: #e13d3d;
+	background-color: #287EF7;
 }
 
 .dark a:active, 

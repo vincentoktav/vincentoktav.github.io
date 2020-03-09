@@ -1,0 +1,159 @@
+---
+title: Are Sleep Trackers Effective?
+author: Vincent Oktavianus
+date: '2019-09-18'
+slug: are-sleep-trackers-effective
+image: 
+  caption: 'Image credit: [**Lukas Blazek**](https://unsplash.com/photos/UAvYasdkzq8)'
+  focal_point: ""
+  placement: 2
+  preview_only: false
+categories:
+  - regression
+  - modeling
+  - R
+tags:
+  - R
+subtitle: 'Statistical learning techniques are used to determine if it is possible to effectively predict time asleep from data that would be available without the aid of a sleep tracker.'
+summary: 'Personal sleep tracking devices are becoming more and more popular. Statistical learning techniques are used to determine if it is possible to effectively predict time asleep from data that would be available without the aid of a sleep tracker.'
+authors: []
+featured: false
+projects: []
+output:
+  blogdown::html_page:
+    toc: yes
+    number_sections: yes
+    toc_depth: 1
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+<div id="TOC">
+<ul>
+<li><a href="#abstract"><span class="toc-section-number">1</span> Abstract</a></li>
+<li><a href="#introduction"><span class="toc-section-number">2</span> Introduction</a></li>
+<li><a href="#methods"><span class="toc-section-number">3</span> Methods</a></li>
+<li><a href="#results"><span class="toc-section-number">4</span> Results</a></li>
+<li><a href="#discussion"><span class="toc-section-number">5</span> Discussion</a></li>
+<li><a href="#appendix"><span class="toc-section-number">6</span> Appendix</a></li>
+</ul>
+</div>
+
+<hr />
+<div id="abstract" class="section level1">
+<h1><span class="header-section-number">1</span> Abstract</h1>
+<blockquote>
+<p>Personal sleep tracking devices are becoming more and more popular. Statistical learning techniques are used to determine if it is possible to effectively predict time asleep from data that would be available without the aid of a sleep tracker.</p>
+</blockquote>
+<hr />
+</div>
+<div id="introduction" class="section level1">
+<h1><span class="header-section-number">2</span> Introduction</h1>
+<p>It is without question that sleep is a very important process for both learning and memory. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> For optimal learning, sleep, both in quality and quantity, is required before and after learning. Depending on certain demographic factors, there are different sleep prescriptions, but for adults, a minimum of seven hours is needed to avoid impairment. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Recently, the link between shift work and cancer has been well established. While more study is needed, there seems to be growing evidence that lack of sleep may play a strong causal role in many cancers. <a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> As the public has become more aware of the importance of sleep, the use of “smart” devices to track sleep has risen. Many sleep trackers provide a wealth of information including not only time asleep, but also details such as time spent in the various stages of sleep. (Light, deep, REM.)</p>
+<p>The effectiveness of these sleep devices is still in question. <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> While the breadth of data that they make available is interesting, the most important by far is the total time asleep. (Asleep being defined clinically, not by simply being in bed.) The additional data, such as time in REM sleep, is interesting, however it is unclear what the target values should be, and more importantly, how we could affect change in these numbers. In contrast, there is a wealth of advice on how to increase quality and time spent asleep. <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> If total time asleep is the only data worth tracking, is a smart device actually necessary? Is it possible to estimate time asleep based on simple metrics such as time spent in bed?</p>
+<p>Statistical learning techniques were applied to a four month sample of data from a Fitbit <a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> user. Time spent in bed was used to predict total time asleep. The results indicate that this prediction can be made with a reasonably small amount of error. However, practical and statistical limitations suggest the need for further investigation.</p>
+<hr />
+</div>
+<div id="methods" class="section level1">
+<h1><span class="header-section-number">3</span> Methods</h1>
+<div id="data" class="section level2">
+<h2><span class="header-section-number">3.1</span> Data</h2>
+<p>The data was accessed via the data export tool provided by Fitbit. <a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> It was collected using a Fitbit Versa 2 by a single subject, a 32 year old adult male living in Ohio and working as a professor. The Fitbit Versa 2 uses both motion and heart rate variability <a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> to predict when the user is sleeping. The collection dates were a series of consecutive days in autumn of 2018. The two quantities of interest in the data are the time spent asleep and the time spent in bed each time the user sleeps. (A user could sleep more than once a day. For example, a two hour nap in the afternoon.) If the former can be predicted from the latter, the device seems unnecessary. (Time spent in bed could simply be tracked manually by a user. Although, it should be noted that one of the benefits of the devices is the automatic tracking of this quantity, which is probably more accurate than manual human tracking.)</p>
+</div>
+<div id="modeling" class="section level2">
+<h2><span class="header-section-number">3.2</span> Modeling</h2>
+<p>In order to predict time asleep given time in bed, three modeling techniques were considered: linear models, k-nearest neighbors models, and tree models. No transformations were considered with the linear model. Default tuning parameters were used to train the two non-parametric models. Only time in bed was used as a predictor variable.</p>
+</div>
+<div id="evaluation" class="section level2">
+<h2><span class="header-section-number">3.3</span> Evaluation</h2>
+<p>To evaluate the ability to predict time asleep with these models, the data was split into estimation, validation, and testing sets. Because of the dependence structure of the data, that is the consecutive nature of the days, the data was split chronologically. That is, the test set is the last 20% of the data chronologically. (And similarly for the validation data.) This is done to evaluate the ability to predict future nights of sleep from past data. Error metrics and graphics are reported using the validation data in the Results section.</p>
+<hr />
+</div>
+</div>
+<div id="results" class="section level1">
+<h1><span class="header-section-number">4</span> Results</h1>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+model
+</th>
+<th style="text-align:right;">
+rmse
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:right;">
+8.444805
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+K-Nearest Neighbors
+</td>
+<td style="text-align:right;">
+11.692058
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Tree
+</td>
+<td style="text-align:right;">
+15.112509
+</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/post/2019-09-18-are-sleep-trackers-effective/index_files/figure-html/graphical-results-1.png" width="1152" style="display: block; margin: auto;" /></p>
+<hr />
+</div>
+<div id="discussion" class="section level1">
+<h1><span class="header-section-number">5</span> Discussion</h1>
+<p>After calculating the Rooted Mean Squared Error (RMSE) which gives us an estimate of the average squared prediction error in the original units used by the response variable for the validation data, we can see that the <strong>linear model</strong> (without transformation) possess the lowest value of RMSE.</p>
+<pre><code>## [1] 9.1931</code></pre>
+<p>Shown above is the value for our Test RMSE. In our linear model, the test RMSE and our validation RMSE is very similar which means there might be a little to no chance of overfit. Moreover, the plot for our linear model looks reasonable enough. Therefore, the linear model is our best model.</p>
+<p>We are trying to predict the total sleep time based only the past data and one predictor which is very hard if we do not account a seasonal factor that could potentially result in limitations of our analysis. For instance, there might be a day where the observed person is very tired thus, he only spends a very little time in bed (’time_bed’) before he fell asleep. The inability to adjust our analysis to the seasonality effects may lead to false interpretations of the results from the analysis. Therefore, due to the RMSE value and limitations, using sleep tracking devices are still the best way to track our total sleep time even though our prediction is close enough to the actual value.</p>
+<p>Future directions:
+We should consider using more variable as our predictor and also put the seasonal factor into account. By doing so we might further increase the accuracy of our predicted values.</p>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1><span class="header-section-number">6</span> Appendix</h1>
+<div id="data-dictionary" class="section level2">
+<h2><span class="header-section-number">6.1</span> Data Dictionary</h2>
+<ul>
+<li><code>start_time</code> - The date and time which the device detected the user has gone to bed due to lack of motion. (But not necessarily started sleep.)</li>
+<li><code>end_time</code> - The date and time which the device detected that the user is no longer in bed, due to motion.</li>
+<li><code>min_asleep</code> - The total sleep time, in minutes. This is meant to estimate a clinical measure of sleep. (Not simply time in bed.)</li>
+<li><code>min_awake</code> - The time spent in bed, but awake, in minutes.</li>
+<li><code>num_awake</code> - The number of times the user “awoke” during their time in bed.</li>
+<li><code>time_bed</code> - Duration between <code>start_time</code> and <code>end_time</code>. The sum of <code>min_asleep</code> and <code>min_awake</code>. In other words, total time in bed, in minutes.</li>
+<li><code>min_rem</code> - Total time spent in REM sleep, in minutes.</li>
+<li><code>min_light</code> - Total time spent in light sleep, in minutes.</li>
+<li><code>min_deep</code> - Total time spent in deep sleep, in minutes.</li>
+</ul>
+</div>
+<div id="eda" class="section level2">
+<h2><span class="header-section-number">6.2</span> EDA</h2>
+<p><img src="/post/2019-09-18-are-sleep-trackers-effective/index_files/figure-html/eda-plots-1.png" width="1152" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="http://healthysleep.med.harvard.edu/healthy/matters/benefits-of-sleep/learning-memory">Harvard Medicine: Sleep, Learning, and Memory</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.cdc.gov/sleep/about_sleep/how_much_sleep.html">CDC: How Much Sleep Do I Need?</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2954516/">Shift Work and Cancer, The Evidence and the Challenge</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://www.tandfonline.com/doi/abs/10.1586/17434440.2016.1171708">Consumer sleep tracking devices: a review of mechanisms, validity and utility</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p><a href="https://news.berkeley.edu/2017/10/17/whywesleep/">Everything you need to know about sleep, but are too tired to ask</a><a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p><a href="https://en.wikipedia.org/wiki/Fitbit">Wikipedia: Fitbit</a><a href="#fnref6" class="footnote-back">↩</a></p></li>
+<li id="fn7"><p>The author would like to note that Fitbit makes it incredibly difficult for users to obtain their own data.<a href="#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p><a href="https://en.m.wikipedia.org/wiki/Heart_rate_variability">Wikipedia: Heart rate variability</a><a href="#fnref8" class="footnote-back">↩</a></p></li>
+</ol>
+</div>

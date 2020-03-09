@@ -18,7 +18,7 @@ height = "300px"
 
 [[item]]
   title = "Quote of the day"
-  content = '\"When life gets you down do you wanna know what you’ve gotta do? Just keep swimming!” – Dory, Finding Nemo'
+  content = '"When life gets you down do you wanna know what you’ve gotta do? <br /> Just keep swimming!” <br /> – Dory, Finding Nemo'
   align = "right"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
@@ -37,7 +37,7 @@ height = "300px"
   
 [[item]]
   title = "Quote of the day"
-  content = '\"THE ONLY LIMIT IS YOUR IMAGINATION.\" - Hiro, Big Hero 6'
+  content = '\"THE ONLY LIMIT IS YOUR IMAGINATION.\" <br /> - Hiro, Big Hero 6'
   align = "left"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
@@ -56,7 +56,7 @@ height = "300px"
 
 [[item]]
   title = "Quote of the day"
-  content = '\"In every job that must be done, there is an element of fun.” – Mary Poppins'
+  content = '\"In every job that must be done, there is an element of fun.” <br /> – Mary Poppins'
   align = "center"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
@@ -74,8 +74,8 @@ height = "300px"
   # cta_icon = "graduation-cap"
 
 [[item]]
-  title = "Quote of the day"
-  content = '\"If watching is all you’re gonna do, then you’re gonna watch your life go by without ya.” — Laverne, The Hunchback of Notre Dame'
+  title = 'Quote of the day'
+  content = '"Life is not a spectator sport. If watching is all you’re gonna do, <br /> then you’re gonna watch your life go by without ya.” <br /> — Laverne, The Hunchback of Notre Dame.'
   align = "right"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
@@ -94,7 +94,7 @@ height = "300px"
   
 [[item]]
   title = "Quote of the day"
-  content = '\"I never look back, darling! It distracts me from the now.” – Edna Mode, The Incredibles.'
+  content = '\"I never look back, darling! It distracts me from the now.” <br /> – Edna Mode, The Incredibles.'
   align = "center"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
@@ -112,14 +112,14 @@ height = "300px"
   # cta_icon = "graduation-cap"
 
 [[item]]
-  title = "Quote of the day"
-  content = '\"First, think. Second, believe. Third, dream. And finally, dare.” – Walt Disney'
+  title = '<p style="color:lavender">Quote of the day</p>'
+  content = '"First, think. Second, believe. Third, dream. And finally, dare.” <br /> - Walt Disney'
   align = "left"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
   #   Deactivate an option by commenting out the line, prefixing it with `#`.
   overlay_color = "#404040"  # An HTML color value.
-  overlay_img = "headers/disney01.jpg"  # Image path relative to your `static/img/` folder.
+  overlay_img = "headers/up.jpg"  # Image path relative to your `static/img/` folder.
   overlay_filter = 0.1  # Darken the image. Value in range 0-1.
 
   # Call to action button (optional).
@@ -132,8 +132,8 @@ height = "300px"
   
 [[item]]
   title = "Quote of the day"
-  content = '\"The very things that hold you down are going to lift you up.” — Timothy Mouse, Dumbo'
-  align = "right"  # Choose `center`, `left`, or `right`.
+  content = '\"The very things that hold you down are going to lift you up.” <br /> — Timothy Mouse, Dumbo'
+  align = "left"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).
   #   Deactivate an option by commenting out the line, prefixing it with `#`.
@@ -150,8 +150,8 @@ height = "300px"
   # cta_icon = "graduation-cap"
   
 [[item]]
-  title = "Quote of the day"
-  content = '\"“You’re only a fool if you give up.” – Aladdin'
+  title = '<p style="color:black">Quote of the day</p>'
+  content = '<p style="color:black">“You’re only a fool if you give up.”</p><p style="color:black">- Aladdin</p> '
   align = "right"  # Choose `center`, `left`, or `right`.
 
   # Overlay a color or image (optional).

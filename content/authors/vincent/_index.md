@@ -38,4 +38,6 @@ social:
 superuser: true
 ---
 
-I am a rising senior majoring in Statistics at University of Illinois at Urbana-Champaign. While studying at the U of I, I am also working as a Course Assistant (CA) in several Statistics classes including [STAT 400 - Statistics and Probability I](http://catalog.illinois.edu/courses-of-instruction/stat/) (the first core Statistics course) and [STAT 420 - Methods of Applied Statistics](http://catalog.illinois.edu/courses-of-instruction/stat/) (statistical modeling in R). I will be graduating this May 2020 and I am open to any career opportunities in the field of Data Science / Data Analytics.
+I am a rising senior majoring in Statistics at University of Illinois at Urbana-Champaign. While studying at the U of I, I am also working as a Course Assistant (CA) in several Statistics classes including [STAT 400 - Statistics and Probability I](http://catalog.illinois.edu/courses-of-instruction/stat/) (the first core statistics course) and [STAT 420 - Methods of Applied Statistics](http://catalog.illinois.edu/courses-of-instruction/stat/) (statistical modeling in R). I will be graduating this May 2020 and I am open to any career opportunities in the field of Data Science / Data Analytics.
+
+This site is a semi-professional blog and personal website. Some of the works are school-related, others are just about programming, analysis, my [dog](/lancelot) or thoughts about life in general.
