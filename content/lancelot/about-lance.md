@@ -53,11 +53,11 @@ subtitle = ""
 
 Most people call me Lance. 
 
-### Hustle ? 
+### Hustle 
 
 Think you can puzzle out this combo name? 
 
-> I am a mixed-breed of Siberian **Hus**ky and Australian Cat**tle** dog, therefore, I am a Hustle! :muscle:
+> I am a mixed-breed of [Siberian ***Hus***ky](https://www.akc.org/dog-breeds/siberian-husky/) and [Australian Cat***tle*** dog](https://www.akc.org/dog-breeds/australian-cattle-dog/), therefore, I am a Hustle! :muscle:
 
 {{< figure src="lance.jpg" title="" lightbox="true" >}}
 

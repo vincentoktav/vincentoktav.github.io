@@ -4,7 +4,7 @@ authors:
 bio: I'm lance.
 interests:
 - Wet food
-- Dog toys
+- Chicken
 - Hiking
 name: Lancelot the Hustle
 role: Full-time dog / Full-time goofball
@@ -21,8 +21,9 @@ social:
 superuser: false
 ---
 
+<img src="53.jpeg" alt="A photo" class="left" /> As you can see, I'm a bit smaller than a Husky but I'm not short! *I'm fun size!*
+
 ### Dislikes
 - High-places
-- Shower
+- Bath
 - Lemon
-
