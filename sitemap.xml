@@ -28,7 +28,37 @@
   </url>
   
   <url>
+    <loc>/authors/lance/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post-lance/2020-03-09-hiking-again/hiking-again/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/lance/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post-lance/</loc>
+    <lastmod>2020-03-09T17:01:19-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/authors/vincent/</loc>
     <lastmod>2020-03-08T19:27:02-05:00</lastmod>
   </url>
   
@@ -58,13 +88,8 @@
   </url>
   
   <url>
-    <loc>/authors/vincent/</loc>
-    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/</loc>
-    <lastmod>2019-12-07T00:00:00+00:00</lastmod>
+    <loc>/post-lance/2020-03-03-teeth-removal-surgery./tooth-removal-surgery/</loc>
+    <lastmod>2020-03-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -235,10 +260,6 @@
   <url>
     <loc>/publication/conference-paper/</loc>
     <lastmod>2013-07-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/authors/lance/</loc>
   </url>
   
   <url>
