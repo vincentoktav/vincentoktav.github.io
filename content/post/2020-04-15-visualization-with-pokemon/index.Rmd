@@ -9,7 +9,7 @@ categories:
 tags:
   - plot
 subtitle: 'Learn how to create a plot using `ggplot2` package'
-summary: ''
+summary: 'We will learn how to use ggplot2 library to create a neat and more elaborate plot than the base plot r function'
 authors: ["vincent"]
 lastmod: '2020-05-08T16:02:22-05:00'
 featured: no
