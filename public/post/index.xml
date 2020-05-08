@@ -5,12 +5,686 @@
     <link>/post/</link>
       <atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     <description>Posts</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Sun, 08 Mar 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>Posts</title>
       <link>/post/</link>
     </image>
+    
+    <item>
+      <title>Visualization with Pokemon</title>
+      <link>/post/visualization-with-pokemon/</link>
+      <pubDate>Wed, 15 Apr 2020 00:00:00 +0000</pubDate>
+      <guid>/post/visualization-with-pokemon/</guid>
+      <description>
+
+
+&lt;div id=&#34;load-library&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;em&gt;Load Library&lt;/em&gt;&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(gridExtra)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## Attaching package: &amp;#39;gridExtra&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## The following object is masked from &amp;#39;package:dplyr&amp;#39;:
+## 
+##     combine&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggrepel)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data&#34; class=&#34;section level1 tabset tabset-fade tabset-pills&#34;&gt;
+&lt;h1&gt;&lt;em&gt;Data&lt;/em&gt;&lt;/h1&gt;
+&lt;p&gt;Data was obtained and accessed via &lt;a href=&#34;https://www.kaggle.com/abcsds/Pokemon&#34;&gt;Kaggle&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;According to the source, the data was collected from 3 different sites:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.Pokemon.com/us/pokedex/&#34;&gt;Pokemon.com&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://Pokemondb.net/pokedex&#34;&gt;Pokemondb&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number&#34;&gt;bulbapedia&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;About&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;This data set includes 721 Pokemon, including their ID number, name, first and second type, and basic stats: HP, Attack, Defense, Special Attack, Special Defense, and Speed.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Imporatnt note: There are Pokemons that share the same ID number with a different evolution (mega evolution or alternative evolution). Thus, there are 800 observations in this dataset while there are only 721 Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;This are the raw attributes that are used for calculating how much damage an attack will do in the games. This dataset is about the Pokemon games (NOT Pokemon cards or Pokemon Go).&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div id=&#34;read-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Read Data&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon =  read_csv(&amp;quot;data/Pokemon.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Parsed with column specification:
+## cols(
+##   `#` = col_double(),
+##   Name = col_character(),
+##   `Type 1` = col_character(),
+##   `Type 2` = col_character(),
+##   Total = col_double(),
+##   HP = col_double(),
+##   Attack = col_double(),
+##   Defense = col_double(),
+##   `Sp. Atk` = col_double(),
+##   `Sp. Def` = col_double(),
+##   Speed = col_double(),
+##   Generation = col_double(),
+##   Legendary = col_logical()
+## )&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;skim-data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Skim Data&lt;/h2&gt;
+&lt;p&gt;Check for missing data and the distributions of each numeric variable.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;skimr::skim(Pokemon)&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;caption&gt;&lt;span id=&#34;tab:skim-data&#34;&gt;Table 1: &lt;/span&gt;Data summary&lt;/caption&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Name&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Pokemon&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Number of rows&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;800&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Number of columns&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;_______________________&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Column type frequency:&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;character&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;logical&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;numeric&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;________________________&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Group variables&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;None&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: character&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;skim_variable&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n_missing&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;complete_rate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;min&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;max&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;empty&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n_unique&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;whitespace&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Name&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;25&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;800&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Type 1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;18&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Type 2&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;386&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.52&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;8&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;18&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: logical&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;skim_variable&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n_missing&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;complete_rate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;count&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Legendary&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0.08&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FAL: 735, TRU: 65&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Variable type: numeric&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;skim_variable&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;n_missing&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;complete_rate&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;mean&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;sd&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p0&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p25&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p50&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p75&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;p100&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;hist&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;#&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;362.81&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;208.34&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;184.75&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;364.5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;539.25&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;721&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▇▇▇▇▇&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Total&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;435.10&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;119.96&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;180&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;330.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;450.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;515.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;780&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▃▆▇▂▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;HP&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;69.26&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;25.53&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;50.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;255&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▃▇▁▁▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Attack&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;79.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32.46&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;55.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;75.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;190&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▂▇▆▂▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Defense&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;73.84&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;31.18&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;50.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;70.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;90.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;230&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▃▇▂▁▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Sp. Atk&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;72.82&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;32.72&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;10&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;49.75&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;95.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;194&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▅▇▅▂▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Sp. Def&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;71.90&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;27.83&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;20&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;50.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;70.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;90.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;230&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▇▇▂▁▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Speed&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;68.28&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;29.06&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;45.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;90.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;180&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▃▇▆▁▁&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;Generation&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.32&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1.66&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;2.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;3.0&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;5.00&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;6&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;▇▅▃▅▂&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data-dictionary&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data Dictionary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;#&lt;/code&gt; - ID for each Pokemon&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Name&lt;/code&gt; - Name of each Pokemon&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Type 1&lt;/code&gt; - Each Pokemon has a type, this determines weakness/resistance to attacks (Primary type)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Type 2&lt;/code&gt; - Some Pokemon are dual type and have 2 (Secondary type), missing value means the Pokemon only has one type of element/attribute&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Total&lt;/code&gt; - sum of all stats that come after this, a general guide to how strong a Pokemon is (overall stats)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HP&lt;/code&gt; - hit points, or health, defines how much damage a Pokemon can withstand before fainting&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Attack&lt;/code&gt; - the base modifier for normal attacks (eg. Scratch, Punch)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Defense&lt;/code&gt; - the base damage resistance against normal attacks&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SP Atk&lt;/code&gt; - special attack, the base modifier for special attacks (e.g. fire blast, bubble beam)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SP Def&lt;/code&gt; - the base damage resistance against special attacks&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Speed&lt;/code&gt; - determines which Pokemon attacks first each round&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Generation&lt;/code&gt; - the generation it came from&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Legendary&lt;/code&gt; - True if Legendary Pokemon False if not&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knitr::kable(head(Pokemon))&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;right&#34;&gt;#&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Name&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Type 1&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Type 2&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Total&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;HP&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Attack&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Defense&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Sp. Atk&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Sp. Def&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Speed&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;Generation&lt;/th&gt;
+&lt;th align=&#34;left&#34;&gt;Legendary&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Bulbasaur&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Grass&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Poison&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;318&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;45&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;49&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;49&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;45&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;2&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Ivysaur&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Grass&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Poison&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;405&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;60&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;62&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;63&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;60&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Venusaur&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Grass&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Poison&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;525&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;82&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;83&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;3&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;VenusaurMega Venusaur&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Grass&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Poison&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;625&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;123&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;122&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;120&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;4&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Charmander&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Fire&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;309&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;39&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;52&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;43&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;60&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;50&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;right&#34;&gt;5&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Charmeleon&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;Fire&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;NA&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;405&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;58&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;64&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;58&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;80&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;1&lt;/td&gt;
+&lt;td align=&#34;left&#34;&gt;FALSE&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;data-manipulation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data Manipulation&lt;/h2&gt;
+&lt;p&gt;From the skim function, we see the variable &lt;code&gt;Generation&lt;/code&gt; as a numeric variable which is wrong. The correct type for it is factor or categorical data, thus, we will have to manipulate the data to fix the issue.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon$Generation = as_factor(Pokemon$Generation)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We also want to rename a few variables here for usage purposes here in R.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon = Pokemon %&amp;gt;% 
+  rename(no = &amp;#39;#&amp;#39;, 
+         type1 = `Type 1`,
+         type2 = `Type 2`,
+         spatk = `Sp. Atk`,
+         spdef = `Sp. Def`) &lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;questions-visualization&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;em&gt;Questions &amp;amp; Visualization&lt;/em&gt;&lt;/h1&gt;
+&lt;div id=&#34;which-primary-pokemon-type-type-1-and-secondary-pokemon-type-type-2-is-the-most-common&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;1. Which primary Pokemon type (&lt;code&gt;Type 1&lt;/code&gt;) and secondary Pokemon type (&lt;code&gt;Type 2&lt;/code&gt;) is the most common?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type1)), fill = &amp;quot;red&amp;quot;, colour = &amp;quot;black&amp;quot;) +
+  labs(x = &amp;quot;Primary Type&amp;quot;, y = &amp;quot;Frequency&amp;quot;, title = &amp;quot;Barplot for `Type 1` Pokemon&amp;quot;) +
+  theme(axis.text.x = element_text(angle = 30)) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-1a-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the plot above, we can see that &lt;strong&gt;Water&lt;/strong&gt; is the most common primary type in Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Follow-up question:
+&lt;ul&gt;
+&lt;li&gt;Is something wrong with the data? Why Flying type is almost non-existent?&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type2)), fill = &amp;quot;lightblue&amp;quot;, colour = &amp;quot;black&amp;quot;) +
+  labs(x = &amp;quot;Secondary Type&amp;quot;, y = &amp;quot;Frequency&amp;quot;, title = &amp;quot;Barplot for `Type 2` Pokemon&amp;quot;) +
+  theme(axis.text.x = element_text(angle = 30)) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-1b-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the plot above, it is clear that most Pokemon do not have a secondary element or type. If we refer back to the data dictionary, missing values in the &lt;code&gt;Type 2&lt;/code&gt; variable means that the Pokemon only has one attribute or element.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Answer to follow-up question from part A:
+&lt;ul&gt;
+&lt;li&gt;Flying-type is more commonly used for the secondary type. Thus, dual-type (having 2 types) Pokemon are more often to have Flying as their second type.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-is-the-most-common-type-combination-in-pokemon-the-most-combined-type-have-dual-types&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;2. What is the most common type combination in Pokemon? (the most combined type / have dual-types)&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# count frequency of each type combination
+mixed = Pokemon %&amp;gt;%
+  group_by(type1, type2) %&amp;gt;%
+  summarise(count = n()) 
+
+# create contingency table of `Type 1` &amp;amp; `Type 2`
+mixed %&amp;gt;% 
+ggplot(aes(x = type1, y = type2)) +
+  geom_tile(aes(fill = count), show.legend = FALSE) +
+  geom_text(aes(label = count)) +
+  labs(x = &amp;quot;Type 1&amp;quot;, y = &amp;quot;Type 2&amp;quot;,
+       title = &amp;quot;Number of Pokemon for each type combination&amp;quot;) +  
+  theme(axis.text.x = element_text(angle = 30)) +
+  scale_fill_gradient(low = &amp;quot;white&amp;quot;, high = &amp;quot;blue&amp;quot;) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;From the contingency table above, we can see that the most common dual-type Pokemon is &lt;em&gt;normal &amp;amp; flying&lt;/em&gt; with 24 Pokemon. We are ignoring the top row value which is the row for Pokemon that only has one element (primary type only).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;are-legendary-pokemon-have-better-stats-in-terms-of-hp-attack-defense-special-attack-special-defense-speed-and-total-than-the-normal-ones&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;3. Are Legendary Pokemon have better Stats (in terms of &lt;code&gt;HP&lt;/code&gt;, &lt;code&gt;Attack&lt;/code&gt;, &lt;code&gt;Defense&lt;/code&gt;, &lt;code&gt;Special Attack&lt;/code&gt;, &lt;code&gt;Special Defense&lt;/code&gt;, &lt;code&gt;Speed&lt;/code&gt;, and &lt;code&gt;Total&lt;/code&gt;) than the normal ones?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Density plot of HP
+p01 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = HP, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;HP&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Attack
+p02 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = Attack, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Attack&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Defense
+p03 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = Defense, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Defense&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Special Attack
+p04 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = spatk, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Special Attack&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Special Defense
+p05 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = spdef, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Special Defense&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Speed
+p06 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = Speed, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Speed&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)
+
+# Density plot of Total
+p07 = Pokemon %&amp;gt;% 
+  ggplot(aes(x = Total, fill = Legendary)) +
+  geom_density() +
+  labs(x = &amp;quot;Total&amp;quot;, y = &amp;quot;Density&amp;quot;) +
+  theme_bw() 
+
+# Print out all plots
+grid.arrange(p01, p02, p03, p04, p05, p06, p07,layout_matrix = cbind(c(1,4,7), c(2,5,7), c(3,6,7)))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plots-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;From the plots that we produced above, it is clear that legendary Pokemon &lt;strong&gt;are better&lt;/strong&gt; (have greater stats) than the normal ones. The legendary Pokemon are better in terms of all Stats (&lt;code&gt;HP&lt;/code&gt;, &lt;code&gt;Attack&lt;/code&gt;, &lt;code&gt;Defense&lt;/code&gt;, &lt;code&gt;Special Attack&lt;/code&gt;, &lt;code&gt;Special Defense&lt;/code&gt;, &lt;code&gt;Speed&lt;/code&gt;, and &lt;code&gt;Total&lt;/code&gt;).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;which-pokemon-generation-have-a-better-overall-stats-total&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;4. Which Pokemon generation have a better overall stats (&lt;code&gt;Total&lt;/code&gt;)?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;%
+  group_by(Generation) %&amp;gt;%
+  summarize(Total = mean(Total)) %&amp;gt;%
+  ggplot(aes(x = Generation, y = Total, group = 1)) +
+  geom_line(colour = &amp;quot;yellow2&amp;quot;) +
+  geom_point() +
+  labs(y=&amp;quot;Average Total&amp;quot;, title=&amp;quot;Average Stats Total of Pokemon in each generation&amp;quot;) +
+  theme_dark() &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the plot above, we see the &lt;em&gt;fourth generation&lt;/em&gt; has the best overall total stats Pokemon. This means the Pokemon that came from the fourth generation has better stats than the others.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;Follow-up question:
+&lt;ul&gt;
+&lt;li&gt;Is the result here is affected by the number of legendary Pokemon in the fourth generation?
+&lt;ul&gt;
+&lt;li&gt;Answer in the next question.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;which-generation-has-the-most-legendary-pokemon&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;5. Which generation has the most legendary Pokemon?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;% 
+  ggplot(aes(x = Generation, fill = Legendary)) + 
+  geom_bar(position=&amp;quot;dodge&amp;quot;) +
+  geom_text(aes(label = ..count..), stat = &amp;quot;count&amp;quot;, position = position_dodge(0.9), vjust = -0.4) +
+  labs(x = &amp;quot;Generation&amp;quot;, y = &amp;quot;Number of Pokemon&amp;quot;,
+       title = &amp;quot;Number of Legendary Pokemon per generation&amp;quot;) +
+  theme_bw() &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-1-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The &lt;strong&gt;third&lt;/strong&gt; generation have a greater number of legendary Pokemon than the rest generations.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;To answer the follow-up question from #4:
+&lt;ul&gt;
+&lt;li&gt;This means &lt;em&gt;the fourth generation’s Pokemon has the best overall stats in-game&lt;/em&gt; and &lt;em&gt;not necessarily because of the number of legendary Pokemon it holds&lt;/em&gt;.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-is-the-strongest-pokemon-in-overall-total-stats-is-it-a-legendary-pokemon&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;6. What is the strongest Pokemon in overall (&lt;code&gt;Total&lt;/code&gt;) stats? Is it a legendary Pokemon?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;%
+  select(Name, Total, Legendary) %&amp;gt;%
+  arrange(desc(Total)) %&amp;gt;%
+  slice(1:20) %&amp;gt;%
+  ggplot(aes(x = reorder(Name, Total), y = Total)) +
+  geom_bar(stat = &amp;quot;identity&amp;quot;, aes(fill = Legendary), colour = &amp;quot;black&amp;quot;) +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = &amp;quot;Name&amp;quot;, title = &amp;quot;Top 20 Pokemon in terms of Total Stats&amp;quot;) +
+  theme_test() &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;From the plot above, we can see that the most Pokemon that have the highest &lt;code&gt;Total&lt;/code&gt; stats are legendary Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;There are 3 Pokemon that share the highest &lt;code&gt;Total&lt;/code&gt; stats in the game which are &lt;em&gt;Mega Rayquaza, Mega Mewtwo Y, and Mega Mewtwo X&lt;/em&gt;. And all three of them are indeed a legendary Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;This also supports the evidence that legendary Pokemon have higher stats than the normal ones.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;what-is-the-weakest-pokemon-in-overall-total-stats-is-it-a-normal-pokemon&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;7. What is the weakest Pokemon in overall (&lt;code&gt;Total&lt;/code&gt;) stats? Is it a normal Pokemon?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;%
+  select(Name, Total, Legendary) %&amp;gt;%
+  arrange(Total) %&amp;gt;%
+  slice(1:10) %&amp;gt;%
+  ggplot(aes(x = reorder(Name, desc(Total)), y = Total)) +
+  geom_bar(stat = &amp;quot;identity&amp;quot;, aes(fill = Legendary), colour = &amp;quot;black&amp;quot;) +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = &amp;quot;Name&amp;quot;, title = &amp;quot;10 weakest Pokemon in terms of Total Stats&amp;quot;) +
+  theme_test() &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-3-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;The weakest Pokemon in terms of &lt;code&gt;Total&lt;/code&gt; stats is &lt;em&gt;Sunkern&lt;/em&gt;. And all Pokemon that have low stats are normal Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;This makes sense since legendary Pokemon is equivalent or stronger than the final evolution (not mega evolution) from a normal Pokemon.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;is-there-a-relationship-between-pokemon-primary-types-type-1-and-total-stats&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;8. Is there a relationship between Pokemon primary types (&lt;code&gt;Type 1&lt;/code&gt;) and &lt;code&gt;Total&lt;/code&gt; stats?&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;Pokemon %&amp;gt;% 
+  group_by(type1) %&amp;gt;% 
+  mutate(midquartile = median(Total)) %&amp;gt;% 
+  ggplot(aes(x = reorder(type1, Total, FUN = median), y = Total)) +
+  geom_boxplot(aes(fill = midquartile)) +
+  scale_fill_gradient(low = &amp;quot;yellow&amp;quot;, high = &amp;quot;red3&amp;quot;) +
+  coord_flip() +
+  labs(x = &amp;quot;Type 1&amp;quot;, title = &amp;quot;Boxplot of Total&amp;quot;) +
+  theme_bw() +
+  theme(legend.position = &amp;quot;none&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The plot above tells us that Dragon-type Pokemon are the strongest out of the other Pokemon type. From the median value, it clearly tells us that the Dragon-type have a very impressive stats.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Is Roulette the Best Way to Make Money?</title>
@@ -21,14 +695,14 @@
 &lt;h1 id=&#34;load-library&#34;&gt;Load library&lt;/h1&gt;
 &lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(tidyverse)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 &lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
 ## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
 ## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
 ## ✔ readr   1.3.1     ✔ forcats 0.4.0
 &lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 &lt;/code&gt;&lt;/pre&gt;
@@ -383,7 +1057,7 @@ results3 = replicate(roulette(bet = &amp;quot;red&amp;quot;, amount = 1), n = 10
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;interpretation-of-results&#34;&gt;Interpretation of Results&lt;/h2&gt;
 &lt;p&gt;It helps to remember the meaning of expected value to interpret the results of this calculation. The expected value is basically, a measurement of the average. It indicates what will happen in the long run every time that we bet $1 on red.&lt;/p&gt;
-&lt;p&gt;While we might win several times in a row in the short term, in the long run we will lose over 2 cents on average each time that we play. The presence of the 0 and 00 spaces are just enough to give the house a slight advantage. This advantage is so small that it can be difficult to detect, but in the end, the player always loses&lt;/p&gt;
+&lt;p&gt;While we might win several times in a row in the short term, in the long run, we will lose over 2 cents on average each time that we play. The presence of the 0 and 00 spaces are just enough to give the house a slight advantage. This advantage is so small that it can be difficult to detect, but in the end, the player always loses&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.7.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Vincent Oktavianus">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Load Library library(tidyverse) ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ── ## ✔ ggplot2 3.2.1 ✔ purrr 0.3.3 ## ✔ tibble 2.1.3 ✔ dplyr 0.8.3 ## ✔ tidyr 1.0.0 ✔ stringr 1.4.0 ## ✔ readr 1.3.1 ✔ forcats 0.4.0 ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ── ## ✖ dplyr::filter() masks stats::filter() ## ✖ dplyr::lag() masks stats::lag() library(gridExtra) ## ## Attaching package: &#39;gridExtra&#39; ## The following object is masked from &#39;package:dplyr&#39;: ## ## combine library(ggrepel)  Data Data was obtained and accessed via Kaggle.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/visualization-with-pokemon/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#3DD1FE">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/an-old-hope.min.css" crossorigin="anonymous" title="hl-light">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/styles/an-old-hope.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Caladea%7COpen+Sans:700i%7CRoboto+Mono:400Spartan,400i%7CKarla:400&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-159454293-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-159454293-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/post/visualization-with-pokemon/">
+
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Vincent Oktavianus">
+  <meta property="og:url" content="/post/visualization-with-pokemon/">
+  <meta property="og:title" content="Visualization with Pokemon | Vincent Oktavianus">
+  <meta property="og:description" content="Load Library library(tidyverse) ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ── ## ✔ ggplot2 3.2.1 ✔ purrr 0.3.3 ## ✔ tibble 2.1.3 ✔ dplyr 0.8.3 ## ✔ tidyr 1.0.0 ✔ stringr 1.4.0 ## ✔ readr 1.3.1 ✔ forcats 0.4.0 ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ── ## ✖ dplyr::filter() masks stats::filter() ## ✖ dplyr::lag() masks stats::lag() library(gridExtra) ## ## Attaching package: &#39;gridExtra&#39; ## The following object is masked from &#39;package:dplyr&#39;: ## ## combine library(ggrepel)  Data Data was obtained and accessed via Kaggle."><meta property="og:image" content="/post/visualization-with-pokemon/featured.jpg">
+  <meta property="twitter:image" content="/post/visualization-with-pokemon/featured.jpg"><meta property="og:locale" content="en-us">
+  
+    
+      <meta property="article:published_time" content="2020-04-15T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-05-08T16:02:22-05:00">
+  
+
+  
+
+
+    
+
+
+
+
+
+
+  
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/post/visualization-with-pokemon/"
+  },
+  "headline": "Visualization with Pokemon",
+  
+  "image": [
+    "/post/visualization-with-pokemon/featured.jpg"
+  ],
+  
+  "datePublished": "2020-04-15T00:00:00Z",
+  "dateModified": "2020-05-08T16:02:22-05:00",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Vincent Oktavianus"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Vincent Oktavianus",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "Load Library library(tidyverse) ## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ── ## ✔ ggplot2 3.2.1 ✔ purrr 0.3.3 ## ✔ tibble 2.1.3 ✔ dplyr 0.8.3 ## ✔ tidyr 1.0.0 ✔ stringr 1.4.0 ## ✔ readr 1.3.1 ✔ forcats 0.4.0 ## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ── ## ✖ dplyr::filter() masks stats::filter() ## ✖ dplyr::lag() masks stats::lag() library(gridExtra) ## ## Attaching package: \u0026#39;gridExtra\u0026#39; ## The following object is masked from \u0026#39;package:dplyr\u0026#39;: ## ## combine library(ggrepel)  Data Data was obtained and accessed via Kaggle."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Visualization with Pokemon | Vincent Oktavianus</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Vincent Oktavianus</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/post"><span>Blog / Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/contact"><span>About / Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/files/cv.pdf"><span>CV</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/lancelot"><span><i class="fas fa-paw"></i></span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+  <article class="article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+
+<div class="article-container pt-3">
+  <h1>Visualization with Pokemon</h1>
+
+  
+  <p class="page-subtitle">Learn how to create a plot using <code>ggplot2</code> package</p>
+  
+
+  
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  
+  <span><a href="/authors/vincent/">Vincent Oktavianus</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    May 8, 2020
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder mr-1"></i><a href="/categories/eda/">EDA</a>, <a href="/categories/r/">R</a></span>
+  
+
+</div>
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+<div class="article-header container featured-image-wrapper mt-4 mb-4" style="max-width: 1200px; max-height: 800px;">
+  <div style="position: relative">
+    <img src="/post/visualization-with-pokemon/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_160190_1200x0_resize_q90_lanczos.jpg" alt="" class="featured-image">
+    <span class="article-header-caption">Image credit: <a href="https://unsplash.com/photos/J1IbThTQJoY"><strong>Kamil S</strong></a></span>
+  </div>
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<div id="load-library" class="section level1">
+<h1><em>Load Library</em></h1>
+<pre class="r"><code>library(tidyverse)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ ggplot2 3.2.1     ✔ purrr   0.3.3
+## ✔ tibble  2.1.3     ✔ dplyr   0.8.3
+## ✔ tidyr   1.0.0     ✔ stringr 1.4.0
+## ✔ readr   1.3.1     ✔ forcats 0.4.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre class="r"><code>library(gridExtra)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;gridExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     combine</code></pre>
+<pre class="r"><code>library(ggrepel)</code></pre>
+</div>
+<div id="data" class="section level1 tabset tabset-fade tabset-pills">
+<h1><em>Data</em></h1>
+<p>Data was obtained and accessed via <a href="https://www.kaggle.com/abcsds/Pokemon">Kaggle</a>.</p>
+<p>According to the source, the data was collected from 3 different sites:</p>
+<ul>
+<li><a href="https://www.Pokemon.com/us/pokedex/">Pokemon.com</a></li>
+<li><a href="https://Pokemondb.net/pokedex">Pokemondb</a></li>
+<li><a href="https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number">bulbapedia</a></li>
+</ul>
+<p><strong>About</strong></p>
+<ul>
+<li><p>This data set includes 721 Pokemon, including their ID number, name, first and second type, and basic stats: HP, Attack, Defense, Special Attack, Special Defense, and Speed.</p></li>
+<li><p>Imporatnt note: There are Pokemons that share the same ID number with a different evolution (mega evolution or alternative evolution). Thus, there are 800 observations in this dataset while there are only 721 Pokemon.</p></li>
+<li><p>This are the raw attributes that are used for calculating how much damage an attack will do in the games. This dataset is about the Pokemon games (NOT Pokemon cards or Pokemon Go).</p></li>
+</ul>
+<div id="read-data" class="section level2">
+<h2>Read Data</h2>
+<pre class="r"><code>Pokemon =  read_csv(&quot;data/Pokemon.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   `#` = col_double(),
+##   Name = col_character(),
+##   `Type 1` = col_character(),
+##   `Type 2` = col_character(),
+##   Total = col_double(),
+##   HP = col_double(),
+##   Attack = col_double(),
+##   Defense = col_double(),
+##   `Sp. Atk` = col_double(),
+##   `Sp. Def` = col_double(),
+##   Speed = col_double(),
+##   Generation = col_double(),
+##   Legendary = col_logical()
+## )</code></pre>
+</div>
+<div id="skim-data" class="section level2">
+<h2>Skim Data</h2>
+<p>Check for missing data and the distributions of each numeric variable.</p>
+<pre class="r"><code>skimr::skim(Pokemon)</code></pre>
+<table>
+<caption><span id="tab:skim-data">Table 1: </span>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">Pokemon</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">800</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">13</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">3</td>
+</tr>
+<tr class="odd">
+<td align="left">logical</td>
+<td align="left">1</td>
+</tr>
+<tr class="even">
+<td align="left">numeric</td>
+<td align="left">9</td>
+</tr>
+<tr class="odd">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">3</td>
+<td align="right">25</td>
+<td align="right">0</td>
+<td align="right">800</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">Type 1</td>
+<td align="right">0</td>
+<td align="right">1.00</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">18</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Type 2</td>
+<td align="right">386</td>
+<td align="right">0.52</td>
+<td align="right">3</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">18</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: logical</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="left">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Legendary</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">0.08</td>
+<td align="left">FAL: 735, TRU: 65</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">#</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">362.81</td>
+<td align="right">208.34</td>
+<td align="right">1</td>
+<td align="right">184.75</td>
+<td align="right">364.5</td>
+<td align="right">539.25</td>
+<td align="right">721</td>
+<td align="left">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td align="left">Total</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">435.10</td>
+<td align="right">119.96</td>
+<td align="right">180</td>
+<td align="right">330.00</td>
+<td align="right">450.0</td>
+<td align="right">515.00</td>
+<td align="right">780</td>
+<td align="left">▃▆▇▂▁</td>
+</tr>
+<tr class="odd">
+<td align="left">HP</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">69.26</td>
+<td align="right">25.53</td>
+<td align="right">1</td>
+<td align="right">50.00</td>
+<td align="right">65.0</td>
+<td align="right">80.00</td>
+<td align="right">255</td>
+<td align="left">▃▇▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Attack</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">79.00</td>
+<td align="right">32.46</td>
+<td align="right">5</td>
+<td align="right">55.00</td>
+<td align="right">75.0</td>
+<td align="right">100.00</td>
+<td align="right">190</td>
+<td align="left">▂▇▆▂▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Defense</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">73.84</td>
+<td align="right">31.18</td>
+<td align="right">5</td>
+<td align="right">50.00</td>
+<td align="right">70.0</td>
+<td align="right">90.00</td>
+<td align="right">230</td>
+<td align="left">▃▇▂▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Sp. Atk</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">72.82</td>
+<td align="right">32.72</td>
+<td align="right">10</td>
+<td align="right">49.75</td>
+<td align="right">65.0</td>
+<td align="right">95.00</td>
+<td align="right">194</td>
+<td align="left">▅▇▅▂▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Sp. Def</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">71.90</td>
+<td align="right">27.83</td>
+<td align="right">20</td>
+<td align="right">50.00</td>
+<td align="right">70.0</td>
+<td align="right">90.00</td>
+<td align="right">230</td>
+<td align="left">▇▇▂▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">Speed</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">68.28</td>
+<td align="right">29.06</td>
+<td align="right">5</td>
+<td align="right">45.00</td>
+<td align="right">65.0</td>
+<td align="right">90.00</td>
+<td align="right">180</td>
+<td align="left">▃▇▆▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">Generation</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3.32</td>
+<td align="right">1.66</td>
+<td align="right">1</td>
+<td align="right">2.00</td>
+<td align="right">3.0</td>
+<td align="right">5.00</td>
+<td align="right">6</td>
+<td align="left">▇▅▃▅▂</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-dictionary" class="section level2">
+<h2>Data Dictionary</h2>
+<ul>
+<li><code>#</code> - ID for each Pokemon</li>
+<li><code>Name</code> - Name of each Pokemon</li>
+<li><code>Type 1</code> - Each Pokemon has a type, this determines weakness/resistance to attacks (Primary type)</li>
+<li><code>Type 2</code> - Some Pokemon are dual type and have 2 (Secondary type), missing value means the Pokemon only has one type of element/attribute</li>
+<li><code>Total</code> - sum of all stats that come after this, a general guide to how strong a Pokemon is (overall stats)</li>
+<li><code>HP</code> - hit points, or health, defines how much damage a Pokemon can withstand before fainting</li>
+<li><code>Attack</code> - the base modifier for normal attacks (eg. Scratch, Punch)</li>
+<li><code>Defense</code> - the base damage resistance against normal attacks</li>
+<li><code>SP Atk</code> - special attack, the base modifier for special attacks (e.g. fire blast, bubble beam)</li>
+<li><code>SP Def</code> - the base damage resistance against special attacks</li>
+<li><code>Speed</code> - determines which Pokemon attacks first each round</li>
+<li><code>Generation</code> - the generation it came from</li>
+<li><code>Legendary</code> - True if Legendary Pokemon False if not</li>
+</ul>
+<pre class="r"><code>knitr::kable(head(Pokemon))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="right">#</th>
+<th align="left">Name</th>
+<th align="left">Type 1</th>
+<th align="left">Type 2</th>
+<th align="right">Total</th>
+<th align="right">HP</th>
+<th align="right">Attack</th>
+<th align="right">Defense</th>
+<th align="right">Sp. Atk</th>
+<th align="right">Sp. Def</th>
+<th align="right">Speed</th>
+<th align="right">Generation</th>
+<th align="left">Legendary</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">Bulbasaur</td>
+<td align="left">Grass</td>
+<td align="left">Poison</td>
+<td align="right">318</td>
+<td align="right">45</td>
+<td align="right">49</td>
+<td align="right">49</td>
+<td align="right">65</td>
+<td align="right">65</td>
+<td align="right">45</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">Ivysaur</td>
+<td align="left">Grass</td>
+<td align="left">Poison</td>
+<td align="right">405</td>
+<td align="right">60</td>
+<td align="right">62</td>
+<td align="right">63</td>
+<td align="right">80</td>
+<td align="right">80</td>
+<td align="right">60</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">Venusaur</td>
+<td align="left">Grass</td>
+<td align="left">Poison</td>
+<td align="right">525</td>
+<td align="right">80</td>
+<td align="right">82</td>
+<td align="right">83</td>
+<td align="right">100</td>
+<td align="right">100</td>
+<td align="right">80</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">3</td>
+<td align="left">VenusaurMega Venusaur</td>
+<td align="left">Grass</td>
+<td align="left">Poison</td>
+<td align="right">625</td>
+<td align="right">80</td>
+<td align="right">100</td>
+<td align="right">123</td>
+<td align="right">122</td>
+<td align="right">120</td>
+<td align="right">80</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="left">Charmander</td>
+<td align="left">Fire</td>
+<td align="left">NA</td>
+<td align="right">309</td>
+<td align="right">39</td>
+<td align="right">52</td>
+<td align="right">43</td>
+<td align="right">60</td>
+<td align="right">50</td>
+<td align="right">65</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="right">5</td>
+<td align="left">Charmeleon</td>
+<td align="left">Fire</td>
+<td align="left">NA</td>
+<td align="right">405</td>
+<td align="right">58</td>
+<td align="right">64</td>
+<td align="right">58</td>
+<td align="right">80</td>
+<td align="right">65</td>
+<td align="right">80</td>
+<td align="right">1</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-manipulation" class="section level2">
+<h2>Data Manipulation</h2>
+<p>From the skim function, we see the variable <code>Generation</code> as a numeric variable which is wrong. The correct type for it is factor or categorical data, thus, we will have to manipulate the data to fix the issue.</p>
+<pre class="r"><code>Pokemon$Generation = as_factor(Pokemon$Generation)</code></pre>
+<p>We also want to rename a few variables here for usage purposes here in R.</p>
+<pre class="r"><code>Pokemon = Pokemon %&gt;% 
+  rename(no = &#39;#&#39;, 
+         type1 = `Type 1`,
+         type2 = `Type 2`,
+         spatk = `Sp. Atk`,
+         spdef = `Sp. Def`) </code></pre>
+</div>
+</div>
+<div id="questions-visualization" class="section level1">
+<h1><em>Questions &amp; Visualization</em></h1>
+<div id="which-primary-pokemon-type-type-1-and-secondary-pokemon-type-type-2-is-the-most-common" class="section level2">
+<h2>1. Which primary Pokemon type (<code>Type 1</code>) and secondary Pokemon type (<code>Type 2</code>) is the most common?</h2>
+<pre class="r"><code>Pokemon %&gt;% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type1)), fill = &quot;red&quot;, colour = &quot;black&quot;) +
+  labs(x = &quot;Primary Type&quot;, y = &quot;Frequency&quot;, title = &quot;Barplot for `Type 1` Pokemon&quot;) +
+  theme(axis.text.x = element_text(angle = 30)) </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-1a-1.png" width="672" /></p>
+<ul>
+<li><p>From the plot above, we can see that <strong>Water</strong> is the most common primary type in Pokemon.</p></li>
+<li>Follow-up question:
+<ul>
+<li>Is something wrong with the data? Why Flying type is almost non-existent?</li>
+</ul></li>
+</ul>
+<pre class="r"><code>Pokemon %&gt;% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type2)), fill = &quot;lightblue&quot;, colour = &quot;black&quot;) +
+  labs(x = &quot;Secondary Type&quot;, y = &quot;Frequency&quot;, title = &quot;Barplot for `Type 2` Pokemon&quot;) +
+  theme(axis.text.x = element_text(angle = 30)) </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-1b-1.png" width="672" /></p>
+<ul>
+<li><p>From the plot above, it is clear that most Pokemon do not have a secondary element or type. If we refer back to the data dictionary, missing values in the <code>Type 2</code> variable means that the Pokemon only has one attribute or element.</p></li>
+<li>Answer to follow-up question from part A:
+<ul>
+<li>Flying-type is more commonly used for the secondary type. Thus, dual-type (having 2 types) Pokemon are more often to have Flying as their second type.</li>
+</ul></li>
+</ul>
+</div>
+<div id="what-is-the-most-common-type-combination-in-pokemon-the-most-combined-type-have-dual-types" class="section level2">
+<h2>2. What is the most common type combination in Pokemon? (the most combined type / have dual-types)</h2>
+<pre class="r"><code># count frequency of each type combination
+mixed = Pokemon %&gt;%
+  group_by(type1, type2) %&gt;%
+  summarise(count = n()) 
+
+# create contingency table of `Type 1` &amp; `Type 2`
+mixed %&gt;% 
+ggplot(aes(x = type1, y = type2)) +
+  geom_tile(aes(fill = count), show.legend = FALSE) +
+  geom_text(aes(label = count)) +
+  labs(x = &quot;Type 1&quot;, y = &quot;Type 2&quot;,
+       title = &quot;Number of Pokemon for each type combination&quot;) +  
+  theme(axis.text.x = element_text(angle = 30)) +
+  scale_fill_gradient(low = &quot;white&quot;, high = &quot;blue&quot;) </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-2-1.png" width="672" /></p>
+<ul>
+<li>From the contingency table above, we can see that the most common dual-type Pokemon is <em>normal &amp; flying</em> with 24 Pokemon. We are ignoring the top row value which is the row for Pokemon that only has one element (primary type only).</li>
+</ul>
+</div>
+<div id="are-legendary-pokemon-have-better-stats-in-terms-of-hp-attack-defense-special-attack-special-defense-speed-and-total-than-the-normal-ones" class="section level2">
+<h2>3. Are Legendary Pokemon have better Stats (in terms of <code>HP</code>, <code>Attack</code>, <code>Defense</code>, <code>Special Attack</code>, <code>Special Defense</code>, <code>Speed</code>, and <code>Total</code>) than the normal ones?</h2>
+<pre class="r"><code># Density plot of HP
+p01 = Pokemon %&gt;% 
+  ggplot(aes(x = HP, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;HP&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Attack
+p02 = Pokemon %&gt;% 
+  ggplot(aes(x = Attack, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Attack&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Defense
+p03 = Pokemon %&gt;% 
+  ggplot(aes(x = Defense, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Defense&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Special Attack
+p04 = Pokemon %&gt;% 
+  ggplot(aes(x = spatk, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Special Attack&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Special Defense
+p05 = Pokemon %&gt;% 
+  ggplot(aes(x = spdef, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Special Defense&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Speed
+p06 = Pokemon %&gt;% 
+  ggplot(aes(x = Speed, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Speed&quot;, y = &quot;Density&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)
+
+# Density plot of Total
+p07 = Pokemon %&gt;% 
+  ggplot(aes(x = Total, fill = Legendary)) +
+  geom_density() +
+  labs(x = &quot;Total&quot;, y = &quot;Density&quot;) +
+  theme_bw() 
+
+# Print out all plots
+grid.arrange(p01, p02, p03, p04, p05, p06, p07,layout_matrix = cbind(c(1,4,7), c(2,5,7), c(3,6,7)))</code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plots-3-1.png" width="672" /></p>
+<ul>
+<li>From the plots that we produced above, it is clear that legendary Pokemon <strong>are better</strong> (have greater stats) than the normal ones. The legendary Pokemon are better in terms of all Stats (<code>HP</code>, <code>Attack</code>, <code>Defense</code>, <code>Special Attack</code>, <code>Special Defense</code>, <code>Speed</code>, and <code>Total</code>).</li>
+</ul>
+</div>
+<div id="which-pokemon-generation-have-a-better-overall-stats-total" class="section level2">
+<h2>4. Which Pokemon generation have a better overall stats (<code>Total</code>)?</h2>
+<pre class="r"><code>Pokemon %&gt;%
+  group_by(Generation) %&gt;%
+  summarize(Total = mean(Total)) %&gt;%
+  ggplot(aes(x = Generation, y = Total, group = 1)) +
+  geom_line(colour = &quot;yellow2&quot;) +
+  geom_point() +
+  labs(y=&quot;Average Total&quot;, title=&quot;Average Stats Total of Pokemon in each generation&quot;) +
+  theme_dark() </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/plot-4-1.png" width="672" /></p>
+<ul>
+<li><p>From the plot above, we see the <em>fourth generation</em> has the best overall total stats Pokemon. This means the Pokemon that came from the fourth generation has better stats than the others.</p></li>
+<li>Follow-up question:
+<ul>
+<li>Is the result here is affected by the number of legendary Pokemon in the fourth generation?
+<ul>
+<li>Answer in the next question.</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="which-generation-has-the-most-legendary-pokemon" class="section level2">
+<h2>5. Which generation has the most legendary Pokemon?</h2>
+<pre class="r"><code>Pokemon %&gt;% 
+  ggplot(aes(x = Generation, fill = Legendary)) + 
+  geom_bar(position=&quot;dodge&quot;) +
+  geom_text(aes(label = ..count..), stat = &quot;count&quot;, position = position_dodge(0.9), vjust = -0.4) +
+  labs(x = &quot;Generation&quot;, y = &quot;Number of Pokemon&quot;,
+       title = &quot;Number of Legendary Pokemon per generation&quot;) +
+  theme_bw() </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<ul>
+<li><p>The <strong>third</strong> generation have a greater number of legendary Pokemon than the rest generations.</p></li>
+<li>To answer the follow-up question from #4:
+<ul>
+<li>This means <em>the fourth generation’s Pokemon has the best overall stats in-game</em> and <em>not necessarily because of the number of legendary Pokemon it holds</em>.</li>
+</ul></li>
+</ul>
+</div>
+<div id="what-is-the-strongest-pokemon-in-overall-total-stats-is-it-a-legendary-pokemon" class="section level2">
+<h2>6. What is the strongest Pokemon in overall (<code>Total</code>) stats? Is it a legendary Pokemon?</h2>
+<pre class="r"><code>Pokemon %&gt;%
+  select(Name, Total, Legendary) %&gt;%
+  arrange(desc(Total)) %&gt;%
+  slice(1:20) %&gt;%
+  ggplot(aes(x = reorder(Name, Total), y = Total)) +
+  geom_bar(stat = &quot;identity&quot;, aes(fill = Legendary), colour = &quot;black&quot;) +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = &quot;Name&quot;, title = &quot;Top 20 Pokemon in terms of Total Stats&quot;) +
+  theme_test() </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<ul>
+<li><p>From the plot above, we can see that the most Pokemon that have the highest <code>Total</code> stats are legendary Pokemon.</p></li>
+<li><p>There are 3 Pokemon that share the highest <code>Total</code> stats in the game which are <em>Mega Rayquaza, Mega Mewtwo Y, and Mega Mewtwo X</em>. And all three of them are indeed a legendary Pokemon.</p></li>
+<li><p>This also supports the evidence that legendary Pokemon have higher stats than the normal ones.</p></li>
+</ul>
+</div>
+<div id="what-is-the-weakest-pokemon-in-overall-total-stats-is-it-a-normal-pokemon" class="section level2">
+<h2>7. What is the weakest Pokemon in overall (<code>Total</code>) stats? Is it a normal Pokemon?</h2>
+<pre class="r"><code>Pokemon %&gt;%
+  select(Name, Total, Legendary) %&gt;%
+  arrange(Total) %&gt;%
+  slice(1:10) %&gt;%
+  ggplot(aes(x = reorder(Name, desc(Total)), y = Total)) +
+  geom_bar(stat = &quot;identity&quot;, aes(fill = Legendary), colour = &quot;black&quot;) +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = &quot;Name&quot;, title = &quot;10 weakest Pokemon in terms of Total Stats&quot;) +
+  theme_test() </code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<ul>
+<li><p>The weakest Pokemon in terms of <code>Total</code> stats is <em>Sunkern</em>. And all Pokemon that have low stats are normal Pokemon.</p></li>
+<li><p>This makes sense since legendary Pokemon is equivalent or stronger than the final evolution (not mega evolution) from a normal Pokemon.</p></li>
+</ul>
+</div>
+<div id="is-there-a-relationship-between-pokemon-primary-types-type-1-and-total-stats" class="section level2">
+<h2>8. Is there a relationship between Pokemon primary types (<code>Type 1</code>) and <code>Total</code> stats?</h2>
+<pre class="r"><code>Pokemon %&gt;% 
+  group_by(type1) %&gt;% 
+  mutate(midquartile = median(Total)) %&gt;% 
+  ggplot(aes(x = reorder(type1, Total, FUN = median), y = Total)) +
+  geom_boxplot(aes(fill = midquartile)) +
+  scale_fill_gradient(low = &quot;yellow&quot;, high = &quot;red3&quot;) +
+  coord_flip() +
+  labs(x = &quot;Type 1&quot;, title = &quot;Boxplot of Total&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;none&quot;)</code></pre>
+<p><img src="/post/2020-04-15-visualization-with-pokemon/index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<ul>
+<li>The plot above tells us that Dragon-type Pokemon are the strongest out of the other Pokemon type. From the median value, it clearly tells us that the Dragon-type have a very impressive stats.</li>
+</ul>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/plot/">plot</a>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="avatar mr-3 avatar-circle" src="/authors/vincent/avatar_hu6808f3c9f9ece05508166cff0d84bf3a_61841_270x270_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Vincent Oktavianus</a></h5>
+      <h6 class="card-subtitle">Student / Course Assistant for STAT420 - Methods of Applied Statistics</h6>
+      <p class="card-text">I&rsquo;m a senior student majoring in Statistics at University of Illinois at Urbana-Champaign.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://www.linkedin.com/in/vincent-oktavianus-90974916b/" target="_blank" rel="noopener">
+        <i class="fab fa-linkedin"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/vincentoktav" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/post/wine-eda/">Basic Exploratory Data Analysis and Simple Linear Regression in Python</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js" integrity="sha256-1zu+3BnLYV9LdiY85uXMzii3bdrkelyp37e0ZyTAQh0=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/css.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/bash.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/javascript.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/languages/markdown.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.a8d7005002cb4a052fd6d721e83df9ba.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    <a href="/license/">LICENSE: CC-BY-SA <br> <i class="fab fa-creative-commons fa-2x"></i><i class="fab fa-creative-commons-by fa-2x"></i><i class="fab fa-creative-commons-sa fa-2x"></i> </a><br>
+  </p>
+  
+
+  <p class="powered-by">
+    © Vincent Oktavianus, 2020 &middot; 
+
+    Made with <i class="far fa-heart" style="color:#3DD1FE"></i>, <a href="https://github.com/vincentoktav/vincentoktav.github.io" target="_blank" rel="noopener"><i class="fas fa-code-branch" style="color:#3DD1FE"></i></a>, the <a href="https://cran.r-project.org/" target="_blank" rel="noopener"><i class="fab fa-r-project"></i> </a><a href="https://github.com/rstudio/blogdown" target="_blank" rel="noopener">blogdown</a> package, and the 
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

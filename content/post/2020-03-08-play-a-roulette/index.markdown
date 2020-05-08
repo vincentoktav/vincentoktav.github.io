@@ -29,7 +29,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Attaching packages ───────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+## ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -40,7 +40,7 @@ library(tidyverse)
 ```
 
 ```
-## ── Conflicts ──────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -351,4 +351,4 @@ results3 = replicate(roulette(bet = "red", amount = 1), n = 10000)
 
 It helps to remember the meaning of expected value to interpret the results of this calculation. The expected value is basically, a measurement of the average. It indicates what will happen in the long run every time that we bet $1 on red.
 
-While we might win several times in a row in the short term, in the long run we will lose over 2 cents on average each time that we play. The presence of the 0 and 00 spaces are just enough to give the house a slight advantage. This advantage is so small that it can be difficult to detect, but in the end, the player always loses
+While we might win several times in a row in the short term, in the long run, we will lose over 2 cents on average each time that we play. The presence of the 0 and 00 spaces are just enough to give the house a slight advantage. This advantage is so small that it can be difficult to detect, but in the end, the player always loses

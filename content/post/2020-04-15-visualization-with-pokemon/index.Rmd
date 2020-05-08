@@ -1,0 +1,312 @@
+---
+title: Visualization with Pokemon
+author: 'Vincent Oktavianus'
+date: '2020-04-15'
+slug: visualization-with-pokemon
+categories:
+  - EDA
+  - R
+tags:
+  - plot
+subtitle: 'Learn how to create a plot using `ggplot2` package'
+summary: ''
+authors: ["vincent"]
+lastmod: '2020-05-08T16:02:22-05:00'
+featured: no
+image: 
+  caption: 'Image credit: [**Kamil S**](https://unsplash.com/photos/J1IbThTQJoY)'
+  focal_point: ""
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+# *Load Library*
+
+```{r load-library}
+library(tidyverse)
+library(gridExtra)
+library(ggrepel)
+```
+
+# *Data* {.tabset .tabset-fade .tabset-pills}
+
+Data was obtained and accessed via [Kaggle](https://www.kaggle.com/abcsds/Pokemon).
+
+According to the source, the data was collected from 3 different sites:
+
+- [Pokemon.com](https://www.Pokemon.com/us/pokedex/)
+- [Pokemondb](https://Pokemondb.net/pokedex)
+- [bulbapedia](https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_by_National_Pok%C3%A9dex_number)
+
+**About**
+
+- This data set includes 721 Pokemon, including their ID number, name, first and second type, and basic stats: HP, Attack, Defense, Special Attack, Special Defense, and Speed.
+
+- Imporatnt note: There are Pokemons that share the same ID number with a different evolution (mega evolution or alternative evolution). Thus, there are 800 observations in this dataset while there are only 721 Pokemon.  
+
+- This are the raw attributes that are used for calculating how much damage an attack will do in the games. This dataset is about the Pokemon games (NOT Pokemon cards or Pokemon Go).
+
+
+## Read Data
+
+```{r read-data}
+Pokemon =  read_csv("data/Pokemon.csv")
+```
+
+## Skim Data
+
+Check for missing data and the distributions of each numeric variable.
+
+```{r skim-data}
+skimr::skim(Pokemon)
+```
+
+## Data Dictionary
+
+- `#` - ID for each Pokemon
+- `Name` - Name of each Pokemon
+- `Type 1` - Each Pokemon has a type, this determines weakness/resistance to attacks (Primary type)
+- `Type 2` - Some Pokemon are dual type and have 2 (Secondary type), missing value means the Pokemon only has one type of element/attribute
+- `Total` - sum of all stats that come after this, a general guide to how strong a Pokemon is (overall stats)
+- `HP` - hit points, or health, defines how much damage a Pokemon can withstand before fainting
+- `Attack` -  the base modifier for normal attacks (eg. Scratch, Punch)
+- `Defense` - the base damage resistance against normal attacks
+- `SP Atk` - special attack, the base modifier for special attacks (e.g. fire blast, bubble beam)
+- `SP Def` - the base damage resistance against special attacks
+- `Speed` - determines which Pokemon attacks first each round
+- `Generation` - the generation it came from
+- `Legendary` - True if Legendary Pokemon False if not 
+
+```{r heads-data}
+knitr::kable(head(Pokemon))
+```
+
+## Data Manipulation
+
+From the skim function, we see the variable `Generation` as a numeric variable which is wrong. The correct type for it is factor or categorical data, thus, we will have to manipulate the data to fix the issue.
+
+```{r data-manipulation}
+Pokemon$Generation = as_factor(Pokemon$Generation)
+```
+
+We also want to rename a few variables here for usage purposes here in R.
+
+```{r data-manipulation2}
+Pokemon = Pokemon %>% 
+  rename(no = '#', 
+         type1 = `Type 1`,
+         type2 = `Type 2`,
+         spatk = `Sp. Atk`,
+         spdef = `Sp. Def`) 
+```
+
+# *Questions & Visualization*
+
+## 1. Which primary Pokemon type (`Type 1`) and secondary Pokemon type (`Type 2`) is the most common?
+
+```{r plot-1a}
+Pokemon %>% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type1)), fill = "red", colour = "black") +
+  labs(x = "Primary Type", y = "Frequency", title = "Barplot for `Type 1` Pokemon") +
+  theme(axis.text.x = element_text(angle = 30)) 
+```
+
+  - From the plot above, we can see that **Water** is the most common primary type in Pokemon.
+  
+  - Follow-up question:
+    - Is something wrong with the data? Why Flying type is almost non-existent?
+
+```{r plot-1b}
+Pokemon %>% 
+  ggplot() +
+  geom_bar(aes(x = fct_infreq(type2)), fill = "lightblue", colour = "black") +
+  labs(x = "Secondary Type", y = "Frequency", title = "Barplot for `Type 2` Pokemon") +
+  theme(axis.text.x = element_text(angle = 30)) 
+```
+
+  - From the plot above, it is clear that most Pokemon do not have a secondary element or type. If we refer back to the data dictionary, missing values in the `Type 2` variable means that the Pokemon only has one attribute or element.
+  
+  - Answer to follow-up question from part A:
+    - Flying-type is more commonly used for the secondary type. Thus, dual-type (having 2 types) Pokemon are more often to have Flying as their second type.
+
+## 2. What is the most common type combination in Pokemon? (the most combined type / have dual-types)
+
+```{r plot-2}
+# count frequency of each type combination
+mixed = Pokemon %>%
+  group_by(type1, type2) %>%
+  summarise(count = n()) 
+
+# create contingency table of `Type 1` & `Type 2`
+mixed %>% 
+ggplot(aes(x = type1, y = type2)) +
+  geom_tile(aes(fill = count), show.legend = FALSE) +
+  geom_text(aes(label = count)) +
+  labs(x = "Type 1", y = "Type 2",
+       title = "Number of Pokemon for each type combination") +  
+  theme(axis.text.x = element_text(angle = 30)) +
+  scale_fill_gradient(low = "white", high = "blue") 
+```
+
+  - From the contingency table above, we can see that the most common dual-type Pokemon is *normal & flying* with 24 Pokemon. We are ignoring the top row value which is the row for Pokemon that only has one element (primary type only).
+
+## 3. Are Legendary Pokemon have better Stats (in terms of `HP`, `Attack`, `Defense`, `Special Attack`, `Special Defense`, `Speed`, and `Total`) than the normal ones? 
+
+```{r plots-3}
+# Density plot of HP
+p01 = Pokemon %>% 
+  ggplot(aes(x = HP, fill = Legendary)) +
+  geom_density() +
+  labs(x = "HP", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Attack
+p02 = Pokemon %>% 
+  ggplot(aes(x = Attack, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Attack", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Defense
+p03 = Pokemon %>% 
+  ggplot(aes(x = Defense, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Defense", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Special Attack
+p04 = Pokemon %>% 
+  ggplot(aes(x = spatk, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Special Attack", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Special Defense
+p05 = Pokemon %>% 
+  ggplot(aes(x = spdef, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Special Defense", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Speed
+p06 = Pokemon %>% 
+  ggplot(aes(x = Speed, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Speed", y = "Density") +
+  theme_bw() +
+  theme(legend.position = "none")
+
+# Density plot of Total
+p07 = Pokemon %>% 
+  ggplot(aes(x = Total, fill = Legendary)) +
+  geom_density() +
+  labs(x = "Total", y = "Density") +
+  theme_bw() 
+
+# Print out all plots
+grid.arrange(p01, p02, p03, p04, p05, p06, p07,layout_matrix = cbind(c(1,4,7), c(2,5,7), c(3,6,7)))
+```
+
+  - From the plots that we produced above, it is clear that legendary Pokemon **are better** (have greater stats) than the normal ones. The legendary Pokemon are better in terms of all Stats (`HP`, `Attack`, `Defense`, `Special Attack`, `Special Defense`, `Speed`, and `Total`).
+  
+## 4. Which Pokemon generation have a better overall stats (`Total`)?
+
+```{r plot-4}
+Pokemon %>%
+  group_by(Generation) %>%
+  summarize(Total = mean(Total)) %>%
+  ggplot(aes(x = Generation, y = Total, group = 1)) +
+  geom_line(colour = "yellow2") +
+  geom_point() +
+  labs(y="Average Total", title="Average Stats Total of Pokemon in each generation") +
+  theme_dark() 
+```
+
+  - From the plot above, we see the *fourth generation* has the best overall total stats Pokemon. This means the Pokemon that came from the fourth generation has better stats than the others. 
+
+  - Follow-up question:
+    - Is the result here is affected by the number of legendary Pokemon in the fourth generation? 
+      - Answer in the next question.
+
+## 5. Which generation has the most legendary Pokemon?
+
+```{r}
+Pokemon %>% 
+  ggplot(aes(x = Generation, fill = Legendary)) + 
+  geom_bar(position="dodge") +
+  geom_text(aes(label = ..count..), stat = "count", position = position_dodge(0.9), vjust = -0.4) +
+  labs(x = "Generation", y = "Number of Pokemon",
+       title = "Number of Legendary Pokemon per generation") +
+  theme_bw() 
+```
+
+  - The **third** generation have a greater number of legendary Pokemon than the rest generations.
+  
+  - To answer the follow-up question from #4:
+    - This means *the fourth generation's Pokemon has the best overall stats in-game* and *not necessarily because of the number of legendary Pokemon it holds*. 
+
+## 6. What is the strongest Pokemon in overall (`Total`) stats? Is it a legendary Pokemon?
+
+```{r}
+Pokemon %>%
+  select(Name, Total, Legendary) %>%
+  arrange(desc(Total)) %>%
+  slice(1:20) %>%
+  ggplot(aes(x = reorder(Name, Total), y = Total)) +
+  geom_bar(stat = "identity", aes(fill = Legendary), colour = "black") +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = "Name", title = "Top 20 Pokemon in terms of Total Stats") +
+  theme_test() 
+```
+
+  - From the plot above, we can see that the most Pokemon that have the highest `Total` stats are legendary Pokemon.
+  
+  - There are 3 Pokemon that share the highest `Total` stats in the game which are *Mega Rayquaza, Mega Mewtwo Y, and Mega Mewtwo X*. And all three of them are indeed a legendary Pokemon. 
+  
+  - This also supports the evidence that legendary Pokemon have higher stats than the normal ones.
+
+## 7. What is the weakest Pokemon in overall (`Total`) stats? Is it a normal Pokemon?
+
+```{r}
+Pokemon %>%
+  select(Name, Total, Legendary) %>%
+  arrange(Total) %>%
+  slice(1:10) %>%
+  ggplot(aes(x = reorder(Name, desc(Total)), y = Total)) +
+  geom_bar(stat = "identity", aes(fill = Legendary), colour = "black") +
+  geom_label(aes(label = Total)) +
+  coord_flip() +
+  labs(x = "Name", title = "10 weakest Pokemon in terms of Total Stats") +
+  theme_test() 
+```
+
+  - The weakest Pokemon in terms of `Total` stats is *Sunkern*. And all Pokemon that have low stats are normal Pokemon. 
+  
+  - This makes sense since legendary Pokemon is equivalent or stronger than the final evolution (not mega evolution) from a normal Pokemon. 
+
+## 8. Is there a relationship between Pokemon primary types (`Type 1`) and `Total` stats?
+
+```{r}
+Pokemon %>% 
+  group_by(type1) %>% 
+  mutate(midquartile = median(Total)) %>% 
+  ggplot(aes(x = reorder(type1, Total, FUN = median), y = Total)) +
+  geom_boxplot(aes(fill = midquartile)) +
+  scale_fill_gradient(low = "yellow", high = "red3") +
+  coord_flip() +
+  labs(x = "Type 1", title = "Boxplot of Total") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+  - The plot above tells us that Dragon-type Pokemon are the strongest out of the other Pokemon type. From the median value, it clearly tells us that the Dragon-type have a very impressive stats.
+  
+  
