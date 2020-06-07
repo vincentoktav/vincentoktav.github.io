@@ -5,12 +5,276 @@
     <link>/tags/plot/</link>
       <atom:link href="/tags/plot/index.xml" rel="self" type="application/rss+xml" />
     <description>plot</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Wed, 15 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Vincent Oktavianus, 2020</copyright><lastBuildDate>Sat, 06 Jun 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>plot</title>
       <link>/tags/plot/</link>
     </image>
+    
+    <item>
+      <title>Predicting Airbnb house prices</title>
+      <link>/post/airbnb-house-regression/</link>
+      <pubDate>Sat, 06 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>/post/airbnb-house-regression/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;div id=&#34;load-library&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;&lt;em&gt;Load Library&lt;/em&gt;&lt;/h1&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;abstract&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Abstract&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Most individuals who sleep at their destination would need a “home away from home.” Businesses have always taken care of that. But Airbnb gave the market a fresh and exciting twist. variety of learning techniques were explored and validated, but ultimately the predictive power of the models appears to be limited by the available data. Additional data collection is recommended.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;introduction&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;When you are away from home for business or pleasure, it is essential that you have a place to relax and rest. &lt;a href=&#34;#fn1&#34; class=&#34;footnote-ref&#34; id=&#34;fnref1&#34;&gt;&lt;sup&gt;1&lt;/sup&gt;&lt;/a&gt; The days of calling hotels and comparing rates over the phone are gone for a long time, and using applications to locate, compare, and book hotels or private residences is the way of the present. &lt;a href=&#34;#fn2&#34; class=&#34;footnote-ref&#34; id=&#34;fnref2&#34;&gt;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt; Airbnb, one of the many options that allow you to rent a personal home or a room in someone else’s house, offering an incredible experience ranging from traditional hotels to luxury mansions. You can read other guest reviews within the app, interact safely with estate owners, and much more. Moreover, you can even list your space and become hospitality entrepreneurs.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#fn3&#34; class=&#34;footnote-ref&#34; id=&#34;fnref3&#34;&gt;&lt;sup&gt;3&lt;/sup&gt;&lt;/a&gt; As Airbnb popularity rises among the public, many including the company itself use the data to find out more about hosts, geographical availability, necessary metrics to make predictions and draw conclusions. Many variables can affect the rental price of an Airbnb listing. However, is it beneficial to predict a rental price? And will be it enough to use only a limited amount of numerical and categorical metrics such as the data provided via Kaggle to estimate the price of rentals?&lt;/p&gt;
+&lt;p&gt;Statistical learning techniques were applied to several listings from Airbnb in New York during 2019. All variables including name, location, room type, and the number of reviews were used to predict the price of rentals. The results indicate that this prediction is almost impossible to make due to a large amount of error. The importance of predicting the price and statistical limitations suggest the need for further investigation.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;methods&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Methods&lt;/h1&gt;
+&lt;div id=&#34;data&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data&lt;/h2&gt;
+&lt;p&gt;The data was accessed via Kaggle. &lt;a href=&#34;#fn4&#34; class=&#34;footnote-ref&#34; id=&#34;fnref4&#34;&gt;&lt;sup&gt;4&lt;/sup&gt;&lt;/a&gt; It contains information on Airbnb listings in New York, NY during 2019 including price, rental attributes, and location. For the purposes of this analysis, the data was restricted to short term (one week or less) rentals in Brooklyn that rent for less than $1000 a night. (Additionally, only rentals that have been reviewed are included.)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;airbnb = read_csv(file = &amp;quot;data/AB_NYC_2019.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;brooklyn = airbnb %&amp;gt;% 
+  filter(minimum_nights &amp;lt;= 7) %&amp;gt;%
+  filter(neighbourhood_group == &amp;quot;Brooklyn&amp;quot;) %&amp;gt;% 
+  filter(number_of_reviews &amp;gt; 0) %&amp;gt;%
+  filter(price &amp;gt; 0, price &amp;lt; 1000) %&amp;gt;% 
+  na.omit() %&amp;gt;% 
+  select(latitude, longitude, room_type, price, minimum_nights, number_of_reviews, 
+         reviews_per_month, calculated_host_listings_count, availability_365) %&amp;gt;% 
+  mutate(room_type = as.factor(room_type))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(42)
+# test-train split
+bk_tst_trn_split = initial_split(brooklyn, prop = 0.80)
+bk_trn = training(bk_tst_trn_split)
+bk_tst = testing(bk_tst_trn_split)
+# estimation-validation split
+bk_est_val_split = initial_split(bk_trn, prop = 0.80)
+bk_est = training(bk_est_val_split)
+bk_val = testing(bk_est_val_split)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;modeling&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Modeling&lt;/h2&gt;
+&lt;p&gt;In order to predict the price of rentals, three modeling techniques were considered: linear models, k-nearest neighbors models, and decision tree models.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linear models with and without log transformed responses were considered. Various subsets of predictors, with and without interaction terms were explored.&lt;/li&gt;
+&lt;li&gt;k-nearest neighbors models were trained using all available predictor variables. The choice of k was chosen using a validation set.&lt;/li&gt;
+&lt;li&gt;Decision tree models were trained using all available predictors. The choice of the complexity parameter was chosen using a validation set.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;fit1 = lm(price ~ ., data = bk_est)
+fit2 = step(fit1, direction = &amp;quot;backward&amp;quot;)
+fit3 = step(lm(price ~ . ^ 2, data = bk_est), direction = &amp;quot;backward&amp;quot;)
+fit4 = lm(log(price) ~ ., data = bk_est)
+fit5 = step(lm(log(price) ~ ., data = bk_est), direction = &amp;quot;backward&amp;quot;)
+fit6 = step(lm(log(price) ~ . ^ 2, data = bk_est), direction = &amp;quot;backward&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;k = 1:100
+knn_mods = map(k, ~knnreg(price ~ ., data = bk_est, k = .x))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cp = c(1.000, 0.100, 0.010, 0.001, 0)
+tree_mods = map(cp, ~rpart(price ~ ., data = bk_est, cp = .x))&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;evaluation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Evaluation&lt;/h2&gt;
+&lt;p&gt;To evaluate the ability to predict rental prices, the data was split into estimation, validation, and testing sets. Error metrics and graphics are reported using the validation data in the Results section.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;calc_rmse = function(actual, predicted) {
+  sqrt(mean( (actual - predicted) ^ 2) )
+}
+
+calc_rmse_model = function(model, data, response) {
+  actual = data[[response]]
+  predicted = predict(model, data)
+  sqrt(mean((actual - predicted) ^ 2))
+}
+
+calc_rmse_log_model = function(model, data, response) {
+  actual = data[[response]]
+  predicted = exp(predict(model, data))
+  sqrt(mean((actual - predicted) ^ 2))
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id=&#34;results&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Results&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;rmse_lm1 = calc_rmse(actual = bk_val$price, predicted = predict(fit1, bk_val))
+rmse_lm2 = calc_rmse(actual = bk_val$price, predicted = predict(fit2, bk_val))
+rmse_lm3 = calc_rmse(actual = bk_val$price, predicted = predict(fit3, bk_val))
+rmse_lm4 = calc_rmse_log_model(model = fit4, data = bk_val, response = &amp;quot;price&amp;quot;)
+rmse_lm5 = calc_rmse_log_model(model = fit5, data = bk_val, response = &amp;quot;price&amp;quot;)
+rmse_lm6 = calc_rmse_log_model(model = fit6, data = bk_val, response = &amp;quot;price&amp;quot;)
+lm_val_rmse = c(rmse_lm1, rmse_lm2, rmse_lm3)
+log_lm_rmse = c(rmse_lm4, rmse_lm5, rmse_lm6)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;knn_preds = map(knn_mods, predict, bk_val)
+knn_val_rmse = map_dbl(knn_preds, calc_rmse, actual = bk_val$price)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tree_preds = map(tree_mods, predict, bk_val)
+tree_val_rmse = map_dbl(tree_preds, calc_rmse, actual = bk_val$price)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tibble(
+  &amp;quot;Model&amp;quot; = c(&amp;quot;Linear&amp;quot;, &amp;quot;Log Linear&amp;quot;, &amp;quot;KNN&amp;quot;, &amp;quot;Decision Tree&amp;quot;),
+  &amp;quot;Tuning&amp;quot; = c(&amp;quot;Subset of Interactions&amp;quot;, &amp;quot;Subset of Interactions&amp;quot;, &amp;quot;k = 44&amp;quot;, &amp;quot;cp = 0.001&amp;quot;),
+  &amp;quot;Validation RMSE&amp;quot; = c(lm_val_rmse[which.min(lm_val_rmse)],
+                        log_lm_rmse[which.min(log_lm_rmse)],
+                        knn_val_rmse[which.min(knn_val_rmse)],
+                        tree_val_rmse[which.min(tree_val_rmse)])
+) %&amp;gt;% 
+  kable(digits = 2) %&amp;gt;% 
+  kable_styling(&amp;quot;striped&amp;quot;, full_width = FALSE)&lt;/code&gt;&lt;/pre&gt;
+&lt;table class=&#34;table table-striped&#34; style=&#34;width: auto !important; margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Model
+&lt;/th&gt;
+&lt;th style=&#34;text-align:left;&#34;&gt;
+Tuning
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;&#34;&gt;
+Validation RMSE
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Linear
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Subset of Interactions
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+66.29
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Log Linear
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Subset of Interactions
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+66.62
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+KNN
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+k = 44
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+81.40
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+Decision Tree
+&lt;/td&gt;
+&lt;td style=&#34;text-align:left;&#34;&gt;
+cp = 0.001
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+69.02
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow = c(1, 3))
+
+axis_limits = c(0, 900)
+
+plot(predict(fit3, bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &amp;quot;red&amp;quot;,
+     xlab = &amp;quot;Predicted&amp;quot;, ylab = &amp;quot;Actual&amp;quot;, 
+     main = &amp;quot;Model: Linear | Data: Validation&amp;quot;)
+abline(a = 0, b = 1, col = &amp;quot;grey&amp;quot;)
+grid()
+
+plot(predict(knn_mods[[44]], bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &amp;quot;lightblue&amp;quot;,
+     xlab = &amp;quot;Predicted&amp;quot;, ylab = &amp;quot;Actual&amp;quot;, 
+     main = &amp;quot;Model: KNN | Data: Validation&amp;quot;)
+abline(a = 0, b = 1, col = &amp;quot;grey&amp;quot;)
+grid()
+
+plot(predict(tree_mods[[4]], bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &amp;quot;green&amp;quot;,
+     xlab = &amp;quot;Predicted&amp;quot;, ylab = &amp;quot;Actual&amp;quot;, 
+     main = &amp;quot;Model: Tree | Data: Validation&amp;quot;)
+abline(a = 0, b = 1, col = &amp;quot;grey&amp;quot;)
+grid()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/AirBnB-pricing-predict/index_files/figure-html/graphical-results-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;discussion&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Discussion&lt;/h1&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm_mod = step(lm(price ~ . ^ 2, data = bk_trn), direction = &amp;quot;backward&amp;quot;)
+tst_rmse = calc_rmse(actual = bk_tst$price, predicted = predict(lm_mod, bk_tst))
+tst_rmse&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Given the results of assessing model performance on the validation data, the linear model that selects from all available predictors, as well as all two-way interactions using backwards selection and AIC appears to be a reasonable choice. Using the test data, we obtain a RMSE of 72.626 dollars. While the range of prices seen in this data, ranging from roughly 0 to 10,000 dollars, with most observations greater than 50 dollars and less than 200 dollars (from the box plot of room_type versus price), this seems to suggest our model is performing badly at the prediction task.&lt;/p&gt;
+&lt;p&gt;The provided dataset may be the limiting factor in this analysis. Even with limited domain knowledge, it should be rather clear that the attributes of the rentals are extremely lacking. There are many more variables that might be more helpful in predicting rental prices such as house rules, amenities, cancellation policy, number of positive and ne. It turns out that Airbnb actually releases much more information than is re-hosted on Kaggle. We will use the complete data in our next analysis.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;appendix&#34; class=&#34;section level1&#34;&gt;
+&lt;h1&gt;Appendix&lt;/h1&gt;
+&lt;div id=&#34;data-dictionary&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Data Dictionary&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;latitude&lt;/code&gt; - latitude coordinates of the listing&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;longitude&lt;/code&gt; - longitude coordinates of the listing&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;room_type&lt;/code&gt; - listing space type&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;price&lt;/code&gt; - price in dollars&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;minimum_nights&lt;/code&gt; - amount of nights minimum&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;number_of_reviews&lt;/code&gt; - number of reviews&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;reviews_per_month&lt;/code&gt; - number of reviews per month&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;calculated_host_listings_count&lt;/code&gt; - amount of listing per host&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;availability_365&lt;/code&gt; - number of days when listing is available for booking&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For additional background on the data, see the data source on Kaggle.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;eda&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;EDA&lt;/h2&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plot_1 = bk_trn %&amp;gt;% 
+  ggplot(aes(x = price)) + 
+  geom_histogram(bins = 30)
+
+plot_2 = bk_trn %&amp;gt;% 
+  ggplot(aes(x = room_type, y = price, colour = price)) + 
+  geom_boxplot()
+
+plot_3 = bk_trn %&amp;gt;% 
+  ggplot(aes(x = reviews_per_month, y = price)) + 
+  geom_point() + geom_smooth(span = 0.3)
+
+gridExtra::grid.arrange(plot_1, plot_2, plot_3, ncol = 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/AirBnB-pricing-predict/index_files/figure-html/eda-plots-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;bk_trn %&amp;gt;% 
+  ggplot(aes(x = longitude, y = latitude, colour = price)) + 
+  geom_point()&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/AirBnB-pricing-predict/index_files/figure-html/price-map-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id=&#34;fn1&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.imore.com/best-apps-finding-place-stay&#34;&gt;Best Apps for Finding a Place to Stay&lt;/a&gt;&lt;a href=&#34;#fnref1&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn2&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://press.airbnb.com/about-us/&#34;&gt;About Airbnb&lt;/a&gt;&lt;a href=&#34;#fnref2&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn3&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://muchneeded.com/airbnb-statistics/&#34;&gt;Statistics of Airbnb&lt;/a&gt;&lt;a href=&#34;#fnref3&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li id=&#34;fn4&#34;&gt;&lt;p&gt;&lt;a href=&#34;https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data&#34;&gt;New York City Airbnb Open Data&lt;/a&gt;&lt;a href=&#34;#fnref4&#34; class=&#34;footnote-back&#34;&gt;↩&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
     
     <item>
       <title>Visualization with Pokemon</title>

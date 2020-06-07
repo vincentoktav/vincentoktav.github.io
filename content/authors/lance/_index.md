@@ -7,7 +7,7 @@ interests:
 - Chicken
 - Hiking
 name: Lancelot the Hustle
-role: Full-time dog / Full-time goofball
+role: Full-time goofball
 social:
 - icon: instagram
   icon_pack: fab

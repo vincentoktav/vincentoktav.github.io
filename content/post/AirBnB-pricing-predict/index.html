@@ -1,0 +1,279 @@
+---
+title: Predicting Airbnb house prices
+author: 'Vincent Oktavianus'
+date: '2020-06-06'
+slug: airbnb-house-regression
+categories:
+  - EDA
+  - R
+  - Regression
+tags:
+  - plot
+subtitle: 'Statistical learning models were applied to Airbnb rental data in order to predict rental prices based on attributes of the rental properties and their associated web listing.'
+summary: 'We will explore a variety of learning techniques in order to find the best model that can predict the rental price of the Airbnb listing focused in Brooklyn area.'
+authors: ["vincent"]
+lastmod: 
+featured: no
+image: 
+  caption: 'Image credit: [**Wynand P**](https://unsplash.com/photos/J1IbThTQJoY)'
+  focal_point: ""
+  placement: 2
+  preview_only: false
+projects: []
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<div id="load-library" class="section level1">
+<h1><em>Load Library</em></h1>
+<hr />
+</div>
+<div id="abstract" class="section level1">
+<h1>Abstract</h1>
+<blockquote>
+<p>Most individuals who sleep at their destination would need a “home away from home.” Businesses have always taken care of that. But Airbnb gave the market a fresh and exciting twist. variety of learning techniques were explored and validated, but ultimately the predictive power of the models appears to be limited by the available data. Additional data collection is recommended.</p>
+</blockquote>
+<hr />
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>When you are away from home for business or pleasure, it is essential that you have a place to relax and rest. <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> The days of calling hotels and comparing rates over the phone are gone for a long time, and using applications to locate, compare, and book hotels or private residences is the way of the present. <a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Airbnb, one of the many options that allow you to rent a personal home or a room in someone else’s house, offering an incredible experience ranging from traditional hotels to luxury mansions. You can read other guest reviews within the app, interact safely with estate owners, and much more. Moreover, you can even list your space and become hospitality entrepreneurs.</p>
+<p><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> As Airbnb popularity rises among the public, many including the company itself use the data to find out more about hosts, geographical availability, necessary metrics to make predictions and draw conclusions. Many variables can affect the rental price of an Airbnb listing. However, is it beneficial to predict a rental price? And will be it enough to use only a limited amount of numerical and categorical metrics such as the data provided via Kaggle to estimate the price of rentals?</p>
+<p>Statistical learning techniques were applied to several listings from Airbnb in New York during 2019. All variables including name, location, room type, and the number of reviews were used to predict the price of rentals. The results indicate that this prediction is almost impossible to make due to a large amount of error. The importance of predicting the price and statistical limitations suggest the need for further investigation.</p>
+<hr />
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>The data was accessed via Kaggle. <a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> It contains information on Airbnb listings in New York, NY during 2019 including price, rental attributes, and location. For the purposes of this analysis, the data was restricted to short term (one week or less) rentals in Brooklyn that rent for less than $1000 a night. (Additionally, only rentals that have been reviewed are included.)</p>
+<pre class="r"><code>airbnb = read_csv(file = &quot;data/AB_NYC_2019.csv&quot;)</code></pre>
+<pre class="r"><code>brooklyn = airbnb %&gt;% 
+  filter(minimum_nights &lt;= 7) %&gt;%
+  filter(neighbourhood_group == &quot;Brooklyn&quot;) %&gt;% 
+  filter(number_of_reviews &gt; 0) %&gt;%
+  filter(price &gt; 0, price &lt; 1000) %&gt;% 
+  na.omit() %&gt;% 
+  select(latitude, longitude, room_type, price, minimum_nights, number_of_reviews, 
+         reviews_per_month, calculated_host_listings_count, availability_365) %&gt;% 
+  mutate(room_type = as.factor(room_type))</code></pre>
+<pre class="r"><code>set.seed(42)
+# test-train split
+bk_tst_trn_split = initial_split(brooklyn, prop = 0.80)
+bk_trn = training(bk_tst_trn_split)
+bk_tst = testing(bk_tst_trn_split)
+# estimation-validation split
+bk_est_val_split = initial_split(bk_trn, prop = 0.80)
+bk_est = training(bk_est_val_split)
+bk_val = testing(bk_est_val_split)</code></pre>
+</div>
+<div id="modeling" class="section level2">
+<h2>Modeling</h2>
+<p>In order to predict the price of rentals, three modeling techniques were considered: linear models, k-nearest neighbors models, and decision tree models.</p>
+<ul>
+<li>Linear models with and without log transformed responses were considered. Various subsets of predictors, with and without interaction terms were explored.</li>
+<li>k-nearest neighbors models were trained using all available predictor variables. The choice of k was chosen using a validation set.</li>
+<li>Decision tree models were trained using all available predictors. The choice of the complexity parameter was chosen using a validation set.</li>
+</ul>
+<pre class="r"><code>fit1 = lm(price ~ ., data = bk_est)
+fit2 = step(fit1, direction = &quot;backward&quot;)
+fit3 = step(lm(price ~ . ^ 2, data = bk_est), direction = &quot;backward&quot;)
+fit4 = lm(log(price) ~ ., data = bk_est)
+fit5 = step(lm(log(price) ~ ., data = bk_est), direction = &quot;backward&quot;)
+fit6 = step(lm(log(price) ~ . ^ 2, data = bk_est), direction = &quot;backward&quot;)</code></pre>
+<pre class="r"><code>k = 1:100
+knn_mods = map(k, ~knnreg(price ~ ., data = bk_est, k = .x))</code></pre>
+<pre class="r"><code>cp = c(1.000, 0.100, 0.010, 0.001, 0)
+tree_mods = map(cp, ~rpart(price ~ ., data = bk_est, cp = .x))</code></pre>
+</div>
+<div id="evaluation" class="section level2">
+<h2>Evaluation</h2>
+<p>To evaluate the ability to predict rental prices, the data was split into estimation, validation, and testing sets. Error metrics and graphics are reported using the validation data in the Results section.</p>
+<pre class="r"><code>calc_rmse = function(actual, predicted) {
+  sqrt(mean( (actual - predicted) ^ 2) )
+}
+
+calc_rmse_model = function(model, data, response) {
+  actual = data[[response]]
+  predicted = predict(model, data)
+  sqrt(mean((actual - predicted) ^ 2))
+}
+
+calc_rmse_log_model = function(model, data, response) {
+  actual = data[[response]]
+  predicted = exp(predict(model, data))
+  sqrt(mean((actual - predicted) ^ 2))
+}</code></pre>
+<hr />
+</div>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<pre class="r"><code>rmse_lm1 = calc_rmse(actual = bk_val$price, predicted = predict(fit1, bk_val))
+rmse_lm2 = calc_rmse(actual = bk_val$price, predicted = predict(fit2, bk_val))
+rmse_lm3 = calc_rmse(actual = bk_val$price, predicted = predict(fit3, bk_val))
+rmse_lm4 = calc_rmse_log_model(model = fit4, data = bk_val, response = &quot;price&quot;)
+rmse_lm5 = calc_rmse_log_model(model = fit5, data = bk_val, response = &quot;price&quot;)
+rmse_lm6 = calc_rmse_log_model(model = fit6, data = bk_val, response = &quot;price&quot;)
+lm_val_rmse = c(rmse_lm1, rmse_lm2, rmse_lm3)
+log_lm_rmse = c(rmse_lm4, rmse_lm5, rmse_lm6)</code></pre>
+<pre class="r"><code>knn_preds = map(knn_mods, predict, bk_val)
+knn_val_rmse = map_dbl(knn_preds, calc_rmse, actual = bk_val$price)</code></pre>
+<pre class="r"><code>tree_preds = map(tree_mods, predict, bk_val)
+tree_val_rmse = map_dbl(tree_preds, calc_rmse, actual = bk_val$price)</code></pre>
+<pre class="r"><code>tibble(
+  &quot;Model&quot; = c(&quot;Linear&quot;, &quot;Log Linear&quot;, &quot;KNN&quot;, &quot;Decision Tree&quot;),
+  &quot;Tuning&quot; = c(&quot;Subset of Interactions&quot;, &quot;Subset of Interactions&quot;, &quot;k = 44&quot;, &quot;cp = 0.001&quot;),
+  &quot;Validation RMSE&quot; = c(lm_val_rmse[which.min(lm_val_rmse)],
+                        log_lm_rmse[which.min(log_lm_rmse)],
+                        knn_val_rmse[which.min(knn_val_rmse)],
+                        tree_val_rmse[which.min(tree_val_rmse)])
+) %&gt;% 
+  kable(digits = 2) %&gt;% 
+  kable_styling(&quot;striped&quot;, full_width = FALSE)</code></pre>
+<table class="table table-striped" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Model
+</th>
+<th style="text-align:left;">
+Tuning
+</th>
+<th style="text-align:right;">
+Validation RMSE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Linear
+</td>
+<td style="text-align:left;">
+Subset of Interactions
+</td>
+<td style="text-align:right;">
+66.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log Linear
+</td>
+<td style="text-align:left;">
+Subset of Interactions
+</td>
+<td style="text-align:right;">
+66.62
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+KNN
+</td>
+<td style="text-align:left;">
+k = 44
+</td>
+<td style="text-align:right;">
+81.40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Decision Tree
+</td>
+<td style="text-align:left;">
+cp = 0.001
+</td>
+<td style="text-align:right;">
+69.02
+</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>par(mfrow = c(1, 3))
+
+axis_limits = c(0, 900)
+
+plot(predict(fit3, bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &quot;red&quot;,
+     xlab = &quot;Predicted&quot;, ylab = &quot;Actual&quot;, 
+     main = &quot;Model: Linear | Data: Validation&quot;)
+abline(a = 0, b = 1, col = &quot;grey&quot;)
+grid()
+
+plot(predict(knn_mods[[44]], bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &quot;lightblue&quot;,
+     xlab = &quot;Predicted&quot;, ylab = &quot;Actual&quot;, 
+     main = &quot;Model: KNN | Data: Validation&quot;)
+abline(a = 0, b = 1, col = &quot;grey&quot;)
+grid()
+
+plot(predict(tree_mods[[4]], bk_val), bk_val$price,
+     xlim = axis_limits, ylim = axis_limits, pch = 19, col = &quot;green&quot;,
+     xlab = &quot;Predicted&quot;, ylab = &quot;Actual&quot;, 
+     main = &quot;Model: Tree | Data: Validation&quot;)
+abline(a = 0, b = 1, col = &quot;grey&quot;)
+grid()</code></pre>
+<p><img src="/post/AirBnB-pricing-predict/index_files/figure-html/graphical-results-1.png" width="1152" /></p>
+<hr />
+</div>
+<div id="discussion" class="section level1">
+<h1>Discussion</h1>
+<pre class="r"><code>lm_mod = step(lm(price ~ . ^ 2, data = bk_trn), direction = &quot;backward&quot;)
+tst_rmse = calc_rmse(actual = bk_tst$price, predicted = predict(lm_mod, bk_tst))
+tst_rmse</code></pre>
+<p>Given the results of assessing model performance on the validation data, the linear model that selects from all available predictors, as well as all two-way interactions using backwards selection and AIC appears to be a reasonable choice. Using the test data, we obtain a RMSE of 72.626 dollars. While the range of prices seen in this data, ranging from roughly 0 to 10,000 dollars, with most observations greater than 50 dollars and less than 200 dollars (from the box plot of room_type versus price), this seems to suggest our model is performing badly at the prediction task.</p>
+<p>The provided dataset may be the limiting factor in this analysis. Even with limited domain knowledge, it should be rather clear that the attributes of the rentals are extremely lacking. There are many more variables that might be more helpful in predicting rental prices such as house rules, amenities, cancellation policy, number of positive and ne. It turns out that Airbnb actually releases much more information than is re-hosted on Kaggle. We will use the complete data in our next analysis.</p>
+<hr />
+</div>
+<div id="appendix" class="section level1">
+<h1>Appendix</h1>
+<div id="data-dictionary" class="section level2">
+<h2>Data Dictionary</h2>
+<ul>
+<li><code>latitude</code> - latitude coordinates of the listing</li>
+<li><code>longitude</code> - longitude coordinates of the listing</li>
+<li><code>room_type</code> - listing space type</li>
+<li><code>price</code> - price in dollars</li>
+<li><code>minimum_nights</code> - amount of nights minimum</li>
+<li><code>number_of_reviews</code> - number of reviews</li>
+<li><code>reviews_per_month</code> - number of reviews per month</li>
+<li><code>calculated_host_listings_count</code> - amount of listing per host</li>
+<li><code>availability_365</code> - number of days when listing is available for booking</li>
+</ul>
+<p>For additional background on the data, see the data source on Kaggle.</p>
+</div>
+<div id="eda" class="section level2">
+<h2>EDA</h2>
+<pre class="r"><code>plot_1 = bk_trn %&gt;% 
+  ggplot(aes(x = price)) + 
+  geom_histogram(bins = 30)
+
+plot_2 = bk_trn %&gt;% 
+  ggplot(aes(x = room_type, y = price, colour = price)) + 
+  geom_boxplot()
+
+plot_3 = bk_trn %&gt;% 
+  ggplot(aes(x = reviews_per_month, y = price)) + 
+  geom_point() + geom_smooth(span = 0.3)
+
+gridExtra::grid.arrange(plot_1, plot_2, plot_3, ncol = 3)</code></pre>
+<p><img src="/post/AirBnB-pricing-predict/index_files/figure-html/eda-plots-1.png" width="1152" /></p>
+<pre class="r"><code>bk_trn %&gt;% 
+  ggplot(aes(x = longitude, y = latitude, colour = price)) + 
+  geom_point()</code></pre>
+<p><img src="/post/AirBnB-pricing-predict/index_files/figure-html/price-map-1.png" width="1152" /></p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://www.imore.com/best-apps-finding-place-stay">Best Apps for Finding a Place to Stay</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p><a href="https://press.airbnb.com/about-us/">About Airbnb</a><a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p><a href="https://muchneeded.com/airbnb-statistics/">Statistics of Airbnb</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p><a href="https://www.kaggle.com/dgomonov/new-york-city-airbnb-open-data">New York City Airbnb Open Data</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
